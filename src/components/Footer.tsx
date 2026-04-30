@@ -33,7 +33,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/25 font-mono">
           <span>© {new Date().getFullYear()} Drift AI, Inc. All rights reserved.</span>
           <span className="tracking-widest uppercase">
-            Engineered in motion · Built for velocity
+            Your vault · Your AI · Your workflows
           </span>
         </div>
       </div>

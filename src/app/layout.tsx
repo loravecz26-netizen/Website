@@ -9,12 +9,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Drift AI — Intelligence That Moves With You",
+  title: "Drift AI — Enterprise AI for Every Industry",
   description:
-    "Drift AI delivers real-time intelligence and adaptive automation that anticipates your next move.",
+    "Build your own AI platform. Load your knowledge vault, specialize it for your industry, and automate your workflows — no code required.",
   openGraph: {
     title: "Drift AI",
-    description: "Intelligence That Moves With You",
+    description: "Enterprise AI for Every Industry",
     type: "website",
   },
 };

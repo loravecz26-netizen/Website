@@ -89,15 +89,15 @@ export default function DriftEmblem() {
         className="text-center mb-16 px-6"
       >
         <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
-          The Symbol
+          The Promise
         </p>
         <h2
           className="text-4xl md:text-5xl font-bold"
           style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
         >
-          Always in motion.
+          Enterprise AI.
           <br />
-          <span className="gold-text">Never off course.</span>
+          <span className="gold-text">For every professional.</span>
         </h2>
       </motion.div>
 
@@ -183,7 +183,7 @@ export default function DriftEmblem() {
         transition={{ duration: 0.8, delay: 1 }}
         className="mt-12 text-sm text-white/40 font-mono uppercase tracking-widest"
       >
-        Engineered in motion · Built for velocity
+        Your vault · Your AI · Your workflows
       </motion.p>
     </section>
   );

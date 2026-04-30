@@ -46,13 +46,13 @@ export default function WaitlistSection() {
             className="text-4xl md:text-6xl font-bold leading-tight mb-6"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
-            Be the first
+            Your industry&apos;s AI
             <br />
-            <span className="gold-text">to drift ahead.</span>
+            <span className="gold-text">starts here.</span>
           </h2>
           <p className="text-white/50 mb-12 text-lg leading-relaxed">
-            Join the waitlist for early access to Drift AI. Limited spots available
-            for founding teams.
+            Join the waitlist for early access. Founding teams get free onboarding,
+            custom Vault setup, and lifetime pricing locked in.
           </p>
 
           {submitted ? (

@@ -6,21 +6,24 @@ import { motion, useInView } from "framer-motion";
 const testimonials = [
   {
     quote:
-      "Drift AI changed the way our ops team works. It's not a tool you open — it's intelligence that's just there.",
-    name: "Sarah Chen",
-    role: "COO, Meridian Health",
+      "I loaded our entire compliance library into the Vault and built a workflow that flags every new SEC filing relevant to our clients automatically. What used to be a full day of research is now a five-minute review.",
+    name: "David Park",
+    role: "Senior Financial Advisor, Park Wealth Management",
+    industry: "Financial Services",
   },
   {
     quote:
-      "The predictive flow feature alone saved our team 3 hours a day. The accuracy is uncanny.",
-    name: "Marcus Reid",
-    role: "VP Engineering, Foundry Labs",
+      "We specialized it on HIPAA, our payer contracts, and our clinical protocols. Now our admin team gets instant answers to coverage questions without calling the payer. It's like having a compliance expert available 24/7.",
+    name: "Dr. Amara Osei",
+    role: "Medical Director, Northgate Health System",
+    industry: "Healthcare",
   },
   {
     quote:
-      "We evaluated six AI platforms. Drift was the only one that felt like it was reading our minds.",
-    name: "Priya Nair",
-    role: "Head of Product, Vela Capital",
+      "Built a workflow that takes any new property address, pulls the zoning code, checks our standard lease terms, and drafts a preliminary investment memo. Three minutes from address to memo.",
+    name: "Renata Vidal",
+    role: "Principal, Meridian Real Estate Partners",
+    industry: "Real Estate",
   },
 ];
 
@@ -41,42 +44,44 @@ export default function TestimonialsSection() {
           className="text-center mb-16"
         >
           <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
-            What Teams Say
+            Early Access Teams
           </p>
           <h2
             className="text-4xl md:text-5xl font-bold"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
-            The teams that drift
+            Built by them.
             <br />
-            <span className="gold-text">never look back.</span>
+            <span className="gold-text">Trusted by them.</span>
           </h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map(({ quote, name, role }, i) => (
+          {testimonials.map(({ quote, name, role, industry }, i) => (
             <motion.div
               key={name}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="relative p-8 rounded-2xl border border-[#c9a84c]/15 bg-[#0d0d0a] hover:border-[#c9a84c]/35 transition-all duration-300 group"
+              className="relative p-8 rounded-2xl border border-[#c9a84c]/15 bg-[#0d0d0a] hover:border-[#c9a84c]/35 transition-all duration-300 group flex flex-col"
             >
-              {/* Quote mark */}
+              {/* Industry tag */}
+              <span className="inline-block mb-5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border border-[#c9a84c]/25 text-[#c9a84c]/70 self-start">
+                {industry}
+              </span>
+
               <span
-                className="absolute top-6 left-8 text-5xl leading-none text-[#c9a84c]/20 group-hover:text-[#c9a84c]/40 transition-colors"
+                className="text-5xl leading-none text-[#c9a84c]/15 group-hover:text-[#c9a84c]/30 transition-colors mb-2"
                 style={{ fontFamily: "Georgia, serif" }}
               >
                 &ldquo;
               </span>
-              <p className="text-white/70 leading-relaxed text-sm mt-6 mb-6">
+              <p className="text-white/65 leading-relaxed text-sm flex-1 mb-6">
                 {quote}
               </p>
               <div className="border-t border-[#c9a84c]/10 pt-4">
                 <p className="font-semibold text-sm">{name}</p>
-                <p className="text-xs text-[#c9a84c]/70 font-mono tracking-wide mt-0.5">
-                  {role}
-                </p>
+                <p className="text-xs text-[#c9a84c]/60 font-mono tracking-wide mt-0.5">{role}</p>
               </div>
             </motion.div>
           ))}

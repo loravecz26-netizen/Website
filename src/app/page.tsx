@@ -1,6 +1,8 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import HowItWorks from "@/components/HowItWorks";
 import DriftOrb from "@/components/DriftOrb";
+import IndustriesSection from "@/components/IndustriesSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import DriftEmblem from "@/components/DriftEmblem";
@@ -13,7 +15,9 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
+        <HowItWorks />
         <DriftOrb />
+        <IndustriesSection />
         <FeaturesSection />
         <TestimonialsSection />
         <DriftEmblem />
