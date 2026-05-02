@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import Navbar from "@/components/Navbar";
 import HowItWorks from "@/components/HowItWorks";
 import DriftOrb from "@/components/DriftOrb";
 import IndustriesSection from "@/components/IndustriesSection";
@@ -12,9 +12,14 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
+      {/* Navbar floats over the 3D hero */}
       <Navbar />
+
+      {/* Three.js full-scroll hero — creates 300vh of scroll space */}
+      <HeroSection />
+
+      {/* Standard sections below the 3D hero */}
       <main>
-        <HeroSection />
         <HowItWorks />
         <DriftOrb />
         <IndustriesSection />

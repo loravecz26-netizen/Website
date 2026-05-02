@@ -1,241 +1,578 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const industries = [
-  "Financial Advisors",
-  "Healthcare Providers",
-  "Legal Teams",
-  "Real Estate Firms",
-  "HR Departments",
-  "Compliance Officers",
-  "Accountants",
-  "Insurance Brokers",
+gsap.registerPlugin(ScrollTrigger);
+
+/* ─── Section content ───────────────────────────────── */
+const SECTIONS = [
+  {
+    title: "DRIFT",
+    line1: "Enterprise AI · Built for your industry",
+    line2: "Your vault. Your workflows. Your rules.",
+  },
+  {
+    title: "VAULT",
+    line1: "Every regulation · Every filing · Every policy",
+    line2: "Loaded, cited, and ready in seconds.",
+  },
+  {
+    title: "FLOW",
+    line1: "Build once · Run forever",
+    line2: "Workflows that automate your entire practice.",
+  },
 ];
 
+/* ─── Types ─────────────────────────────────────────── */
+interface ThreeState {
+  scene: THREE.Scene | null;
+  camera: THREE.PerspectiveCamera | null;
+  renderer: THREE.WebGLRenderer | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  composer: any | null;
+  stars: THREE.Points[];
+  nebula: THREE.Mesh | null;
+  mountains: THREE.Mesh[];
+  animationId: number | null;
+  targetCameraX: number;
+  targetCameraY: number;
+  targetCameraZ: number;
+  locations: number[];
+}
+
 export default function HeroSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const tickerRef = useRef<HTMLDivElement>(null);
+  const containerRef   = useRef<HTMLDivElement>(null);
+  const stickyRef      = useRef<HTMLDivElement>(null);
+  const canvasRef      = useRef<HTMLCanvasElement>(null);
+  const titleRef       = useRef<HTMLHeadingElement>(null);
+  const subtitleRef    = useRef<HTMLDivElement>(null);
+  const progressRef    = useRef<HTMLDivElement>(null);
+  const menuRef        = useRef<HTMLDivElement>(null);
 
-  /* Gold particle field */
+  const smoothCamera   = useRef({ x: 0, y: 30, z: 100 });
+  const [scrollPct, setScrollPct]       = useState(0);
+  const [section, setSection]           = useState(0);
+  const [prevSection, setPrevSection]   = useState(0);
+  const [isReady, setIsReady]           = useState(false);
+
+  const three = useRef<ThreeState>({
+    scene: null, camera: null, renderer: null, composer: null,
+    stars: [], nebula: null, mountains: [],
+    animationId: null,
+    targetCameraX: 0, targetCameraY: 30, targetCameraZ: 300,
+    locations: [],
+  });
+
+  /* ── Three.js init ──────────────────────────────────── */
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const refs = three.current;
 
-    let animId: number;
-    const particles: {
-      x: number; y: number; r: number;
-      dx: number; dy: number; alpha: number;
-    }[] = [];
+    const init = async () => {
+      /* Dynamically import post-processing to avoid SSR issues */
+      const { EffectComposer } = await import(
+        /* webpackChunkName: "postprocessing" */
+        "three/examples/jsm/postprocessing/EffectComposer.js"
+      );
+      const { RenderPass } = await import(
+        "three/examples/jsm/postprocessing/RenderPass.js"
+      );
+      const { UnrealBloomPass } = await import(
+        "three/examples/jsm/postprocessing/UnrealBloomPass.js"
+      );
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
+      if (!canvasRef.current) return;
 
-    for (let i = 0; i < 90; i++) {
-      particles.push({
-        x: Math.random() * (canvas.width || 1200),
-        y: Math.random() * (canvas.height || 800),
-        r: Math.random() * 1.4 + 0.3,
-        dx: (Math.random() - 0.5) * 0.25,
-        dy: -(Math.random() * 0.35 + 0.08),
-        alpha: Math.random() * 0.6 + 0.2,
+      /* Scene */
+      refs.scene = new THREE.Scene();
+      refs.scene.fog = new THREE.FogExp2(0x000000, 0.00022);
+
+      /* Camera */
+      refs.camera = new THREE.PerspectiveCamera(
+        75, window.innerWidth / window.innerHeight, 0.1, 2000
+      );
+      refs.camera.position.set(0, 30, 300);
+
+      /* Renderer */
+      refs.renderer = new THREE.WebGLRenderer({
+        canvas: canvasRef.current,
+        antialias: true,
+        alpha: true,
       });
-    }
+      refs.renderer.setSize(window.innerWidth, window.innerHeight);
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      refs.renderer.toneMappingExposure = 0.55;
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201,168,76,${p.alpha})`;
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        p.alpha -= 0.003;
-        if (p.alpha <= 0 || p.y < 0) {
-          p.x = Math.random() * canvas.width;
-          p.y = canvas.height + 5;
-          p.alpha = Math.random() * 0.6 + 0.2;
-        }
-      }
-      animId = requestAnimationFrame(draw);
+      /* Post-processing */
+      refs.composer = new EffectComposer(refs.renderer);
+      refs.composer.addPass(new RenderPass(refs.scene, refs.camera));
+      const bloom = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        0.7, 0.35, 0.82
+      );
+      refs.composer.addPass(bloom);
+
+      buildStarField();
+      buildNebula();
+      buildMountains();
+      buildAtmosphere();
+      captureLocations();
+      animate();
+      setIsReady(true);
     };
-    draw();
+
+    /* ── Stars ────────────────────────────────────────── */
+    const buildStarField = () => {
+      const refs = three.current;
+      const COUNT = 4500;
+
+      for (let layer = 0; layer < 3; layer++) {
+        const geo   = new THREE.BufferGeometry();
+        const pos   = new Float32Array(COUNT * 3);
+        const col   = new Float32Array(COUNT * 3);
+        const sizes = new Float32Array(COUNT);
+
+        for (let j = 0; j < COUNT; j++) {
+          const r     = 200 + Math.random() * 800;
+          const theta = Math.random() * Math.PI * 2;
+          const phi   = Math.acos(Math.random() * 2 - 1);
+          pos[j * 3]     = r * Math.sin(phi) * Math.cos(theta);
+          pos[j * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+          pos[j * 3 + 2] = r * Math.cos(phi);
+
+          const c = new THREE.Color();
+          const roll = Math.random();
+          if (roll < 0.65)       c.setHSL(0,    0,    0.82 + Math.random() * 0.18); // warm white
+          else if (roll < 0.88)  c.setHSL(0.1,  0.65, 0.80);                        // gold
+          else                   c.setHSL(0.08, 0.45, 0.90);                        // amber
+          col[j * 3] = c.r; col[j * 3 + 1] = c.g; col[j * 3 + 2] = c.b;
+          sizes[j] = Math.random() * 1.8 + 0.4;
+        }
+
+        geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute("color",    new THREE.BufferAttribute(col, 3));
+        geo.setAttribute("size",     new THREE.BufferAttribute(sizes, 1));
+
+        const mat = new THREE.ShaderMaterial({
+          uniforms: {
+            time:  { value: 0 },
+            depth: { value: layer },
+          },
+          vertexShader: `
+            attribute float size;
+            attribute vec3 color;
+            varying vec3 vColor;
+            uniform float time;
+            uniform float depth;
+            void main() {
+              vColor = color;
+              vec3 p = position;
+              float angle = time * 0.04 * (1.0 - depth * 0.28);
+              mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+              p.xy = rot * p.xy;
+              vec4 mvp = modelViewMatrix * vec4(p, 1.0);
+              gl_PointSize = size * (280.0 / -mvp.z);
+              gl_Position = projectionMatrix * mvp;
+            }
+          `,
+          fragmentShader: `
+            varying vec3 vColor;
+            void main() {
+              float d = length(gl_PointCoord - vec2(0.5));
+              if (d > 0.5) discard;
+              gl_FragColor = vec4(vColor, 1.0 - smoothstep(0.0, 0.5, d));
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        });
+
+        const pts = new THREE.Points(geo, mat);
+        refs.scene!.add(pts);
+        refs.stars.push(pts);
+      }
+    };
+
+    /* ── Nebula ───────────────────────────────────────── */
+    const buildNebula = () => {
+      const refs = three.current;
+      const geo  = new THREE.PlaneGeometry(8000, 4000, 80, 80);
+      const mat  = new THREE.ShaderMaterial({
+        uniforms: {
+          time:    { value: 0 },
+          color1:  { value: new THREE.Color(0xc9a84c) }, // gold
+          color2:  { value: new THREE.Color(0x3d1a00) }, // dark amber
+          opacity: { value: 0.28 },
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          varying float vElev;
+          uniform float time;
+          void main() {
+            vUv = uv;
+            vec3 p = position;
+            float elev = sin(p.x * 0.01 + time) * cos(p.y * 0.01 + time) * 18.0;
+            p.z += elev;
+            vElev = elev;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 color1;
+          uniform vec3 color2;
+          uniform float opacity;
+          uniform float time;
+          varying vec2 vUv;
+          varying float vElev;
+          void main() {
+            float mix_ = sin(vUv.x * 9.0 + time) * cos(vUv.y * 9.0 + time);
+            vec3 col = mix(color1, color2, mix_ * 0.5 + 0.5);
+            float a = opacity * (1.0 - length(vUv - 0.5) * 2.0);
+            a *= 1.0 + vElev * 0.01;
+            gl_FragColor = vec4(col, a);
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.z = -1050;
+      refs.scene!.add(mesh);
+      refs.nebula = mesh;
+    };
+
+    /* ── Mountains ────────────────────────────────────── */
+    const buildMountains = () => {
+      const refs = three.current;
+      const LAYERS = [
+        { z: -50,  h: 60,  color: 0x1a1710, op: 1.0 },
+        { z: -100, h: 80,  color: 0x12100a, op: 0.85 },
+        { z: -150, h: 100, color: 0x0a0d15, op: 0.65 },
+        { z: -200, h: 120, color: 0x050708, op: 0.45 },
+      ];
+
+      LAYERS.forEach((layer, idx) => {
+        const pts: THREE.Vector2[] = [];
+        const SEGS = 50;
+        for (let i = 0; i <= SEGS; i++) {
+          const x = (i / SEGS - 0.5) * 1000;
+          const y =
+            Math.sin(i * 0.1) * layer.h +
+            Math.sin(i * 0.05) * layer.h * 0.5 +
+            Math.random() * layer.h * 0.2 - 100;
+          pts.push(new THREE.Vector2(x, y));
+        }
+        pts.push(new THREE.Vector2(5000, -300));
+        pts.push(new THREE.Vector2(-5000, -300));
+
+        const shape = new THREE.Shape(pts);
+        const geo   = new THREE.ShapeGeometry(shape);
+        const mat   = new THREE.MeshBasicMaterial({
+          color: layer.color,
+          transparent: true,
+          opacity: layer.op,
+          side: THREE.DoubleSide,
+        });
+
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.z = layer.z;
+        mesh.position.y = layer.z;
+        mesh.userData = { baseZ: layer.z, index: idx };
+        refs.scene!.add(mesh);
+        refs.mountains.push(mesh);
+      });
+    };
+
+    /* ── Atmosphere ───────────────────────────────────── */
+    const buildAtmosphere = () => {
+      const refs = three.current;
+      const geo  = new THREE.SphereGeometry(600, 32, 32);
+      const mat  = new THREE.ShaderMaterial({
+        uniforms: { time: { value: 0 } },
+        vertexShader: `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vNormal;
+          uniform float time;
+          void main() {
+            float i = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+            // Gold atmosphere
+            vec3 atm = vec3(0.79, 0.66, 0.30) * i;
+            atm *= sin(time * 1.8) * 0.1 + 0.9;
+            gl_FragColor = vec4(atm, i * 0.22);
+          }
+        `,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+      });
+      refs.scene!.add(new THREE.Mesh(geo, mat));
+    };
+
+    const captureLocations = () => {
+      const refs = three.current;
+      refs.locations = refs.mountains.map(m => m.position.z);
+    };
+
+    /* ── Render loop ──────────────────────────────────── */
+    const animate = () => {
+      const refs  = three.current;
+      refs.animationId = requestAnimationFrame(animate);
+      const t = Date.now() * 0.001;
+
+      refs.stars.forEach(s => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (s.material as any).uniforms.time.value = t;
+      });
+      if (refs.nebula) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (refs.nebula.material as any).uniforms.time.value = t * 0.5;
+      }
+
+      if (refs.camera) {
+        const EAS = 0.05;
+        smoothCamera.current.x += (refs.targetCameraX - smoothCamera.current.x) * EAS;
+        smoothCamera.current.y += (refs.targetCameraY - smoothCamera.current.y) * EAS;
+        smoothCamera.current.z += (refs.targetCameraZ - smoothCamera.current.z) * EAS;
+
+        refs.camera.position.x = smoothCamera.current.x + Math.sin(t * 0.1) * 2;
+        refs.camera.position.y = smoothCamera.current.y + Math.cos(t * 0.14) * 1;
+        refs.camera.position.z = smoothCamera.current.z;
+        refs.camera.lookAt(0, 10, -600);
+      }
+
+      refs.mountains.forEach((m, i) => {
+        const pf = 1 + i * 0.5;
+        m.position.x = Math.sin(t * 0.1) * 2 * pf;
+        m.position.y = 50 + Math.cos(t * 0.14) * pf;
+      });
+
+      refs.composer?.render();
+    };
+
+    init();
+
+    const onResize = () => {
+      const refs = three.current;
+      if (!refs.camera || !refs.renderer || !refs.composer) return;
+      refs.camera.aspect = window.innerWidth / window.innerHeight;
+      refs.camera.updateProjectionMatrix();
+      refs.renderer.setSize(window.innerWidth, window.innerHeight);
+      refs.composer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", onResize);
 
     return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
+      const refs = three.current;
+      if (refs.animationId) cancelAnimationFrame(refs.animationId);
+      window.removeEventListener("resize", onResize);
+      refs.stars.forEach(s => { s.geometry.dispose(); (s.material as THREE.Material).dispose(); });
+      refs.mountains.forEach(m => { m.geometry.dispose(); (m.material as THREE.Material).dispose(); });
+      if (refs.nebula) { refs.nebula.geometry.dispose(); (refs.nebula.material as THREE.Material).dispose(); }
+      refs.renderer?.dispose();
     };
   }, []);
 
-  /* Ticker scroll */
+  /* ── GSAP entrance animation ────────────────────────── */
   useEffect(() => {
-    const el = tickerRef.current;
-    if (!el) return;
-    let x = 0;
-    let animId: number;
-    const speed = 0.5;
-    const scroll = () => {
-      x -= speed;
-      if (x < -(el.scrollWidth / 2)) x = 0;
-      el.style.transform = `translateX(${x}px)`;
-      animId = requestAnimationFrame(scroll);
+    if (!isReady) return;
+
+    const tl = gsap.timeline();
+
+    if (menuRef.current) {
+      tl.from(menuRef.current, { x: -80, opacity: 0, duration: 1, ease: "power3.out" });
+    }
+    if (titleRef.current) {
+      const chars = titleRef.current.querySelectorAll(".tc");
+      tl.from(chars, { y: 180, opacity: 0, duration: 1.4, stagger: 0.055, ease: "power4.out" }, "-=0.5");
+    }
+    if (subtitleRef.current) {
+      const lines = subtitleRef.current.querySelectorAll(".sl");
+      tl.from(lines, { y: 40, opacity: 0, duration: 0.9, stagger: 0.18, ease: "power3.out" }, "-=0.8");
+    }
+    if (progressRef.current) {
+      tl.from(progressRef.current, { opacity: 0, y: 30, duration: 0.8, ease: "power2.out" }, "-=0.5");
+    }
+
+    return () => { tl.kill(); };
+  }, [isReady]);
+
+  /* ── Title transition when section changes ───────────── */
+  useEffect(() => {
+    if (!isReady || section === prevSection) return;
+    if (!titleRef.current || !subtitleRef.current) return;
+
+    const chars = titleRef.current.querySelectorAll(".tc");
+    const lines = subtitleRef.current.querySelectorAll(".sl");
+
+    gsap.fromTo(chars,
+      { y: section > prevSection ? 60 : -60, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, stagger: 0.04, ease: "power3.out" }
+    );
+    gsap.fromTo(lines,
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.7, stagger: 0.15, delay: 0.2, ease: "power2.out" }
+    );
+
+    setPrevSection(section);
+  }, [section, prevSection, isReady]);
+
+  /* ── Scroll handler ─────────────────────────────────── */
+  useEffect(() => {
+    const CAMERA_POSITIONS = [
+      { x: 0, y: 30,  z: 300  },
+      { x: 0, y: 40,  z: -50  },
+      { x: 0, y: 50,  z: -700 },
+    ];
+
+    const onScroll = () => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const scrollY   = window.scrollY;
+      const maxScroll = container.offsetHeight - window.innerHeight;
+      const progress  = Math.max(0, Math.min(scrollY / maxScroll, 1));
+
+      setScrollPct(progress);
+
+      const totalProg = progress * (SECTIONS.length - 1);
+      const idx       = Math.min(Math.floor(totalProg), SECTIONS.length - 1);
+      const sectionProg = totalProg % 1;
+
+      setSection(prev => {
+        if (prev !== idx) return idx;
+        return prev;
+      });
+
+      const refs = three.current;
+      const cur  = CAMERA_POSITIONS[idx]     ?? CAMERA_POSITIONS[SECTIONS.length - 1];
+      const nxt  = CAMERA_POSITIONS[idx + 1] ?? cur;
+
+      refs.targetCameraX = cur.x + (nxt.x - cur.x) * sectionProg;
+      refs.targetCameraY = cur.y + (nxt.y - cur.y) * sectionProg;
+      refs.targetCameraZ = cur.z + (nxt.z - cur.z) * sectionProg;
+
+      refs.mountains.forEach((m, i) => {
+        const speed  = 1 + i * 0.9;
+        const targetZ = refs.locations[i] + scrollY * speed * 0.5;
+        if (progress > 0.65) {
+          m.position.z = 600000;
+          if (refs.nebula) refs.nebula.position.z = 600000;
+        } else {
+          m.position.z = refs.locations[i];
+          if (refs.nebula) refs.nebula.position.z = targetZ - 100;
+        }
+      });
     };
-    scroll();
-    return () => cancelAnimationFrame(animId);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const cur = SECTIONS[section] ?? SECTIONS[0];
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Radial glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-5%,rgba(201,168,76,0.13),transparent)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_50%_50%,rgba(201,168,76,0.04),transparent)]" />
+    /* Outer container — height creates scroll space */
+    <div ref={containerRef} style={{ height: `${SECTIONS.length * 100}vh` }}>
 
-      {/* Particle canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-
-      {/* CRT scanline overlay */}
+      {/* Sticky viewport — canvas lives here */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,1) 2px,rgba(0,0,0,1) 4px)",
-        }}
-      />
-
-      {/* Main content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 text-center pt-28 pb-16 w-full">
-
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#c9a84c]/40 bg-[#c9a84c]/10 text-[#c9a84c] text-xs font-mono uppercase tracking-widest mb-10"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#c9a84c] animate-pulse" />
-          Now in Early Access
-        </motion.div>
-
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-[88px] font-bold leading-[1.02] tracking-tight mb-8"
-          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-        >
-          Enterprise AI.
-          <br />
-          <span className="gold-text">Built for</span>
-          <br />
-          Your Industry.
-        </motion.h1>
-
-        {/* Sub */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.25 }}
-          className="max-w-2xl mx-auto text-lg md:text-xl text-white/55 leading-relaxed mb-4"
-        >
-          Load your knowledge vault. Specialize the AI for your field.
-          Build workflows that run themselves.
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="max-w-xl mx-auto text-base text-white/35 mb-12"
-        >
-          The AI platform your industry has been waiting for — without the enterprise contract.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
-        >
-          <a
-            href="#waitlist"
-            className="w-full sm:w-auto px-9 py-4 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#e8c97a] text-[#0a0a0a] text-base font-bold tracking-wide hover:brightness-110 transition-all duration-200 shadow-[0_0_35px_rgba(201,168,76,0.4)]"
-          >
-            Start Building Free
-          </a>
-          <a
-            href="#how-it-works"
-            className="w-full sm:w-auto px-9 py-4 rounded-full border border-white/20 text-white/75 text-base font-medium hover:border-[#c9a84c]/50 hover:text-[#c9a84c] transition-all duration-200"
-          >
-            See How It Works →
-          </a>
-        </motion.div>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.75 }}
-          className="grid grid-cols-3 gap-6 max-w-md mx-auto"
-        >
-          {[
-            { value: "Any", label: "Industry" },
-            { value: "Zero", label: "Code Required" },
-            { value: "100%", label: "Your Data" },
-          ].map(({ value, label }) => (
-            <div key={label} className="flex flex-col items-center gap-1">
-              <span
-                className="text-3xl md:text-4xl font-bold gold-text"
-                style={{ fontFamily: "Georgia, serif" }}
-              >
-                {value}
-              </span>
-              <span className="text-xs font-mono uppercase tracking-widest text-white/35">
-                {label}
-              </span>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Industry ticker */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.1, duration: 0.8 }}
-        className="relative w-full overflow-hidden py-5 border-t border-b border-[#c9a84c]/15"
+        ref={stickyRef}
+        style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}
       >
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10" />
-        <div ref={tickerRef} className="flex items-center gap-0 whitespace-nowrap will-change-transform">
-          {[...industries, ...industries].map((name, i) => (
-            <span key={i} className="flex items-center gap-6 px-6">
-              <span className="text-xs font-mono uppercase tracking-widest text-white/30">
-                {name}
-              </span>
-              <span className="w-1 h-1 rounded-full bg-[#c9a84c]/40" />
-            </span>
-          ))}
+        <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+
+        {/* ── Side menu ─────────────────────────────────── */}
+        <div ref={menuRef} className="side-menu">
+          <div className="menu-icon">
+            <span /><span /><span />
+          </div>
+          <div className="vertical-label">DRIFT AI</div>
         </div>
-      </motion.div>
 
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <div className="w-px h-10 bg-gradient-to-b from-[#c9a84c]/40 to-transparent" />
-      </motion.div>
-    </section>
+        {/* ── Main overlay ──────────────────────────────── */}
+        <div className="hero-overlay">
+          <h1 ref={titleRef} className="hero-title-3d" aria-label={cur.title}>
+            {cur.title.split("").map((ch, i) => (
+              <span key={`${section}-${i}`} className="tc" style={{ display: "inline-block" }}>
+                {ch === " " ? " " : ch}
+              </span>
+            ))}
+          </h1>
+
+          <div ref={subtitleRef} className="hero-sub-3d">
+            <p className="sl">{cur.line1}</p>
+            <p className="sl">{cur.line2}</p>
+          </div>
+
+          {/* CTA — only on first section */}
+          {section === 0 && (
+            <div className="hero-cta-row" style={{ marginTop: "2.5rem", display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href="#waitlist"
+                style={{
+                  padding: "0.85rem 2.2rem",
+                  borderRadius: "9999px",
+                  background: "linear-gradient(135deg, #c9a84c, #e8c97a)",
+                  color: "#09090b",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  letterSpacing: "0.04em",
+                  textDecoration: "none",
+                  boxShadow: "0 0 32px rgba(201,168,76,0.45)",
+                }}
+              >
+                Get Early Access
+              </a>
+              <a
+                href="#how-it-works"
+                style={{
+                  padding: "0.85rem 2.2rem",
+                  borderRadius: "9999px",
+                  border: "1px solid rgba(201,168,76,0.35)",
+                  color: "rgba(255,255,255,0.75)",
+                  fontSize: "0.9rem",
+                  letterSpacing: "0.04em",
+                  textDecoration: "none",
+                  backdropFilter: "blur(12px)",
+                }}
+              >
+                See How It Works →
+              </a>
+            </div>
+          )}
+        </div>
+
+        {/* ── Scroll progress ───────────────────────────── */}
+        <div ref={progressRef} className="scroll-hud">
+          <span className="hud-label">SCROLL</span>
+          <div className="hud-track">
+            <div className="hud-fill" style={{ width: `${scrollPct * 100}%` }} />
+          </div>
+          <span className="hud-counter">
+            {String(section + 1).padStart(2, "0")} / {String(SECTIONS.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* ── Vignette ──────────────────────────────────── */}
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(0,0,0,0.5) 100%)",
+        }} />
+      </div>
+    </div>
   );
 }
