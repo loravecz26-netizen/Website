@@ -1,70 +1,85 @@
-"use client";
+'use client';
+import React from 'react';
+import { Grid2x2PlusIcon, MenuIcon } from 'lucide-react';
+import { Sheet, SheetContent, SheetFooter } from '@/components/ui/sheet';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+const links = [
+	{ label: 'Features', href: '#features' },
+	{ label: 'Pricing', href: '#pricing' },
+	{ label: 'About', href: '#' },
+];
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+export function FloatingHeader() {
+	const [open, setOpen] = React.useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+	return (
+		<header
+			className={cn(
+				'sticky top-5 z-50',
+				'mx-auto w-full max-w-3xl rounded-lg border shadow',
+				'bg-background/95 supports-[backdrop-filter]:bg-background/80 backdrop-blur-lg',
+			)}
+		>
+			<nav className="mx-auto flex items-center justify-between p-1.5">
+				<div className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 duration-100">
+					<Grid2x2PlusIcon className="size-5" />
+					<p className="font-mono text-base font-bold">Asme</p>
+				</div>
 
-  return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-[#0a0a0a]/90 backdrop-blur-md border-b border-[#c9a84c]/20"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 relative">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#8b6914] orb-glow" />
-            <div className="absolute inset-[3px] rounded-full bg-[#0a0a0a]" />
-            <div className="absolute inset-[6px] rounded-full bg-gradient-to-br from-[#e8c97a] to-[#c9a84c]" />
-          </div>
-          <span
-            className="text-xl font-bold tracking-tight gold-text"
-            style={{ fontFamily: "Georgia, serif" }}
-          >
-            Drift AI
-          </span>
-        </Link>
+				<div className="hidden items-center gap-1 lg:flex">
+					{links.map((link) => (
+						<a
+							key={link.label}
+							className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+							href={link.href}
+						>
+							{link.label}
+						</a>
+					))}
+				</div>
 
-        {/* Nav links */}
-        <div className="hidden md:flex items-center gap-8 text-sm text-white/70">
-          {["Product", "Solutions", "Pricing", "Docs", "Company"].map((item) => (
-            <Link
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="hover:text-[#c9a84c] transition-colors duration-200 tracking-wide"
-            >
-              {item}
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="#"
-            className="hidden md:block text-sm text-white/60 hover:text-white transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="#waitlist"
-            className="text-sm px-4 py-2 rounded-full bg-gradient-to-r from-[#c9a84c] to-[#e8c97a] text-[#0a0a0a] font-semibold hover:brightness-110 transition-all duration-200"
-          >
-            Get Early Access
-          </Link>
-        </div>
-      </div>
-    </nav>
-  );
+				<div className="flex items-center gap-2">
+					<Button size="sm">Login</Button>
+					<Sheet open={open} onOpenChange={setOpen}>
+						<Button
+							size="icon"
+							variant="outline"
+							onClick={() => setOpen(!open)}
+							className="lg:hidden"
+						>
+							<MenuIcon className="size-4" />
+						</Button>
+						<SheetContent
+							className="bg-background/95 supports-[backdrop-filter]:bg-background/80 gap-0 backdrop-blur-lg"
+							showClose={false}
+							side="left"
+						>
+							<div className="grid gap-y-2 overflow-y-auto px-4 pt-12 pb-5">
+								{links.map((link) => (
+									<a
+										key={link.label}
+										className={buttonVariants({
+											variant: 'ghost',
+											className: 'justify-start',
+										})}
+										href={link.href}
+									>
+										{link.label}
+									</a>
+								))}
+							</div>
+							<SheetFooter>
+								<Button variant="outline">Sign In</Button>
+								<Button>Get Started</Button>
+							</SheetFooter>
+						</SheetContent>
+					</Sheet>
+				</div>
+			</nav>
+		</header>
+	);
 }
+
+export default FloatingHeader;
