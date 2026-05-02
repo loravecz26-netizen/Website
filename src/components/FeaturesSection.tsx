@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { TiltCard } from "@/components/TiltCard";
 
 const features = [
   {
@@ -108,18 +109,25 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="bg-[#070705] p-8 group hover:bg-[#0f0e0a] transition-colors duration-300"
+              className="bg-[#070705]"
             >
-              <div className="text-[#c9a84c]/60 group-hover:text-[#c9a84c] transition-colors duration-300 mb-5">
-                {icon}
-              </div>
-              <h3
-                className="text-lg font-bold mb-3 group-hover:text-[#c9a84c] transition-colors duration-300"
-                style={{ fontFamily: "Georgia, serif" }}
+              <TiltCard
+                effect="gravitate"
+                tiltLimit={8}
+                scale={1}
+                className="p-8 group hover:bg-[#0f0e0a] h-full"
               >
-                {title}
-              </h3>
-              <p className="text-sm text-white/45 leading-relaxed">{description}</p>
+                <div className="text-[#c9a84c]/60 group-hover:text-[#c9a84c] transition-colors duration-300 mb-5">
+                  {icon}
+                </div>
+                <h3
+                  className="text-lg font-bold mb-3 group-hover:text-[#c9a84c] transition-colors duration-300"
+                  style={{ fontFamily: "Georgia, serif" }}
+                >
+                  {title}
+                </h3>
+                <p className="text-sm text-white/45 leading-relaxed">{description}</p>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

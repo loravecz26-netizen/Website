@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { TiltCard } from "@/components/TiltCard";
 
 const testimonials = [
   {
@@ -63,26 +64,32 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="relative p-8 rounded-2xl border border-[#c9a84c]/15 bg-[#0d0d0a] hover:border-[#c9a84c]/35 transition-all duration-300 group flex flex-col"
             >
-              {/* Industry tag */}
-              <span className="inline-block mb-5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border border-[#c9a84c]/25 text-[#c9a84c]/70 self-start">
-                {industry}
-              </span>
-
-              <span
-                className="text-5xl leading-none text-[#c9a84c]/15 group-hover:text-[#c9a84c]/30 transition-colors mb-2"
-                style={{ fontFamily: "Georgia, serif" }}
+              <TiltCard
+                effect="gravitate"
+                tiltLimit={10}
+                scale={1.03}
+                className="relative p-8 rounded-2xl border border-[#c9a84c]/15 bg-[#0d0d0a] hover:border-[#c9a84c]/35 group flex flex-col h-full"
               >
-                &ldquo;
-              </span>
-              <p className="text-white/65 leading-relaxed text-sm flex-1 mb-6">
-                {quote}
-              </p>
-              <div className="border-t border-[#c9a84c]/10 pt-4">
-                <p className="font-semibold text-sm">{name}</p>
-                <p className="text-xs text-[#c9a84c]/60 font-mono tracking-wide mt-0.5">{role}</p>
-              </div>
+                {/* Industry tag */}
+                <span className="inline-block mb-5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border border-[#c9a84c]/25 text-[#c9a84c]/70 self-start">
+                  {industry}
+                </span>
+
+                <span
+                  className="text-5xl leading-none text-[#c9a84c]/15 group-hover:text-[#c9a84c]/30 transition-colors mb-2"
+                  style={{ fontFamily: "Georgia, serif" }}
+                >
+                  &ldquo;
+                </span>
+                <p className="text-white/65 leading-relaxed text-sm flex-1 mb-6">
+                  {quote}
+                </p>
+                <div className="border-t border-[#c9a84c]/10 pt-4">
+                  <p className="font-semibold text-sm">{name}</p>
+                  <p className="text-xs text-[#c9a84c]/60 font-mono tracking-wide mt-0.5">{role}</p>
+                </div>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

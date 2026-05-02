@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { TiltCard } from "@/components/TiltCard";
 
 const steps = [
   {
@@ -94,54 +95,60 @@ export default function HowItWorks() {
               initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="group relative rounded-2xl border border-[#c9a84c]/12 bg-[#0d0d0a] hover:border-[#c9a84c]/30 transition-all duration-300 overflow-hidden"
             >
-              {/* Hover glow */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_60%_at_0%_50%,rgba(201,168,76,0.04),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <TiltCard
+                effect="gravitate"
+                tiltLimit={5}
+                scale={1.02}
+                className="group relative rounded-2xl border border-[#c9a84c]/12 bg-[#0d0d0a] hover:border-[#c9a84c]/30"
+              >
+                {/* Hover glow */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_60%_at_0%_50%,rgba(201,168,76,0.04),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-              <div className="relative p-8 md:p-10 grid md:grid-cols-[auto_1fr_auto] gap-8 md:gap-12 items-start">
-                {/* Step number */}
-                <div className="flex items-start gap-6 md:gap-0 md:flex-col">
-                  <span
-                    className="text-5xl md:text-7xl font-bold leading-none gold-text opacity-30 group-hover:opacity-60 transition-opacity duration-300"
-                    style={{ fontFamily: "Georgia, serif" }}
-                  >
-                    {number}
-                  </span>
-                </div>
-
-                {/* Main content */}
-                <div>
-                  <div className="flex items-center gap-3 mb-2 text-[#c9a84c]">
-                    {icon}
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#c9a84c]/70">
-                      {subtitle}
+                <div className="relative p-8 md:p-10 grid md:grid-cols-[auto_1fr_auto] gap-8 md:gap-12 items-start">
+                  {/* Step number */}
+                  <div className="flex items-start gap-6 md:gap-0 md:flex-col">
+                    <span
+                      className="text-5xl md:text-7xl font-bold leading-none gold-text opacity-30 group-hover:opacity-60 transition-opacity duration-300"
+                      style={{ fontFamily: "Georgia, serif" }}
+                    >
+                      {number}
                     </span>
                   </div>
-                  <h3
-                    className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-[#e8c97a] transition-colors duration-300"
-                    style={{ fontFamily: "Georgia, serif" }}
-                  >
-                    {title}
-                  </h3>
-                  <p className="text-white/55 leading-relaxed max-w-2xl">{description}</p>
-                </div>
 
-                {/* Examples */}
-                <div className="md:min-w-[220px]">
-                  <p className="text-xs font-mono uppercase tracking-widest text-white/25 mb-3">
-                    Examples
-                  </p>
-                  <ul className="space-y-2">
-                    {examples.map((ex) => (
-                      <li key={ex} className="flex items-start gap-2 text-sm text-white/45">
-                        <span className="text-[#c9a84c]/50 mt-0.5 flex-shrink-0">→</span>
-                        {ex}
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Main content */}
+                  <div>
+                    <div className="flex items-center gap-3 mb-2 text-[#c9a84c]">
+                      {icon}
+                      <span className="text-xs font-mono uppercase tracking-widest text-[#c9a84c]/70">
+                        {subtitle}
+                      </span>
+                    </div>
+                    <h3
+                      className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-[#e8c97a] transition-colors duration-300"
+                      style={{ fontFamily: "Georgia, serif" }}
+                    >
+                      {title}
+                    </h3>
+                    <p className="text-white/55 leading-relaxed max-w-2xl">{description}</p>
+                  </div>
+
+                  {/* Examples */}
+                  <div className="md:min-w-[220px]">
+                    <p className="text-xs font-mono uppercase tracking-widest text-white/25 mb-3">
+                      Examples
+                    </p>
+                    <ul className="space-y-2">
+                      {examples.map((ex) => (
+                        <li key={ex} className="flex items-start gap-2 text-sm text-white/45">
+                          <span className="text-[#c9a84c]/50 mt-0.5 flex-shrink-0">→</span>
+                          {ex}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              </TiltCard>
             </motion.div>
           ))}
         </div>
