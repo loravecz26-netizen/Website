@@ -97,7 +97,7 @@ export default function HowItWorks() {
               initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="group relative rounded-2xl border border-primary/[0.12] bg-card hover:border-primary/30 transition-all duration-300 overflow-hidden"
+              className="group relative rounded-2xl border border-primary/[0.12] bg-card hover:border-primary/30 transition-all duration-300 filter-glass"
             >
               {/* Hover glow */}
               <div

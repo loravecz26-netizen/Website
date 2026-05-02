@@ -385,3 +385,10 @@ body {
 /* ── Pointer events on CTAs ───────────────────────────── */
 .hero-cta-row { pointer-events: all; }
 .hero-cta-row a:hover { opacity: 0.85; transform: translateY(-1px); transition: all .2s ease; }
+
+/* ─── SVG glass distortion filter ──────────────────────── */
+.filter-glass {
+  filter: url(#radio-glass);
+  /* extra margin so the ±30px displacement isn't clipped by parents */
+  isolation: isolate;
+}

@@ -114,7 +114,7 @@ export default function IndustriesSection() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-primary/15 bg-card p-8 md:p-10"
+            className="rounded-2xl border border-primary/15 bg-card p-8 md:p-10 filter-glass"
           >
             <p className="text-xs font-mono uppercase tracking-widest text-primary/60 mb-2">
               {current.role}

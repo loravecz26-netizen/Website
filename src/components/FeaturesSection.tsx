@@ -111,7 +111,7 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="bg-background p-8 group hover:bg-accent transition-colors duration-300"
+              className="bg-background p-8 group hover:bg-accent transition-colors duration-300 filter-glass"
             >
               <div className="text-primary/60 group-hover:text-primary transition-colors duration-300 mb-5">
                 {icon}

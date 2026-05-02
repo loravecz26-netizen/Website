@@ -66,7 +66,7 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="relative p-8 rounded-2xl border border-primary/15 bg-card hover:border-primary/35 transition-all duration-300 group flex flex-col"
+              className="relative p-8 rounded-2xl border border-primary/15 bg-card hover:border-primary/35 transition-all duration-300 group flex flex-col filter-glass"
             >
               {/* Industry tag */}
               <span className="inline-block mb-5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border border-primary/25 text-primary/70 self-start">

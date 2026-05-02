@@ -8,10 +8,14 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import DriftEmblem from "@/components/DriftEmblem";
 import WaitlistSection from "@/components/WaitlistSection";
 import Footer from "@/components/Footer";
+import { GlassFilter } from "@/components/GlassFilter";
 
 export default function Home() {
   return (
     <>
+      {/* SVG filter definition — referenced as filter: url(#radio-glass) */}
+      <GlassFilter />
+
       {/* Navbar floats over the 3D hero */}
       <Navbar />
 
