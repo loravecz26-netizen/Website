@@ -2,7 +2,6 @@
 
 import { MouseEvent, useEffect, useRef, useState } from "react";
 
-/* ─── Types ─────────────────────────────────────────── */
 type BadgeType =
   | "product-of-the-day"
   | "product-of-the-week"
@@ -15,7 +14,6 @@ interface AwardBadgeProps {
   link?: string;
 }
 
-/* ─── Constants ─────────────────────────────────────── */
 const identityMatrix =
   "1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1";
 
@@ -24,8 +22,7 @@ const minRotate = -0.25;
 const maxScale  = 1;
 const minScale  = 0.97;
 
-/* Dark-gold badge backgrounds: varies by place */
-const bgColors = ["#1f1a09", "#161309", "#0f0e07"];
+const bgColors = ["#2a1e1a", "#1e1512", "#140f0d"];
 
 const badgeTitle: Record<BadgeType, string> = {
   "product-of-the-day":   "Product of the Day",
@@ -34,56 +31,49 @@ const badgeTitle: Record<BadgeType, string> = {
   "ai-pioneer":           "AI Pioneer Award",
 };
 
-/* Gold-foil shimmer overlays (replaces rainbow) */
 const foilColors = [
-  "hsl(43, 80%, 55%)",          // gold
-  "hsl(36, 85%, 65%)",          // amber
-  "hsl(50, 90%, 72%)",          // light gold
-  "hsl(30, 70%, 58%)",          // warm amber
-  "hsl(43, 60%, 38%)",          // dark gold
-  "hsl(55, 95%, 80%)",          // bright yellow-gold
-  "rgba(255,245,210,0.85)",     // cream flash
+  "hsl(15, 50%, 40%)",
+  "hsl(25, 70%, 65%)",
+  "hsl(20, 80%, 72%)",
+  "hsl(10, 55%, 48%)",
+  "hsl(15, 40%, 28%)",
+  "hsl(30, 75%, 80%)",
+  "rgba(255,235,210,0.85)",
   "transparent",
   "transparent",
-  "rgba(255,255,255,0.5)",      // white flash
+  "rgba(255,255,255,0.5)",
 ];
 
-/* ─── Drift AI logomark (36×36 canvas) ─────────────── */
 const DriftMark = () => (
   <g transform="translate(10, 9)">
-    {/* Outer ring */}
     <circle cx="18" cy="18" r="14" fill="none"
-      stroke="rgba(201,168,76,0.35)" strokeWidth="1" />
-    {/* D letterform */}
+      stroke="rgba(100,74,64,0.35)" strokeWidth="1" />
     <path
       d="M10 8 L10 28 L18 28 C26 28 31 23 31 18 C31 13 26 8 18 8 Z"
       fill="none"
-      stroke="rgba(201,168,76,0.9)"
+      stroke="rgba(100,74,64,0.9)"
       strokeWidth="1.6"
       strokeLinejoin="round"
     />
-    {/* Wave accent inside D */}
     <path
       d="M13 18 Q16.5 13.5 20 18 Q23.5 22.5 27 18"
       fill="none"
-      stroke="rgba(201,168,76,0.65)"
+      stroke="rgba(100,74,64,0.65)"
       strokeWidth="1.4"
       strokeLinecap="round"
     />
-    {/* Core dot */}
-    <circle cx="18" cy="18" r="1.5" fill="rgba(232,201,122,0.8)" />
+    <circle cx="18" cy="18" r="1.5" fill="rgba(255,224,194,0.8)" />
   </g>
 );
 
-/* ════════════════════════════════════════════════════ */
 export function AwardBadge({ type, place, link }: AwardBadgeProps) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   const [overlayAngle,   setOverlayAngle]   = useState(0);
   const [matrix,         setMatrix]         = useState(identityMatrix);
   const [currentMatrix,  setCurrentMatrix]  = useState(identityMatrix);
-  const [animFrozen,     setAnimFrozen]     = useState(false);   // true while hovering (freeze idle anim)
-  const [transitionOff,  setTransitionOff]  = useState(true);   // disable CSS transition on overlay during idle
+  const [animFrozen,     setAnimFrozen]     = useState(false);
+  const [transitionOff,  setTransitionOff]  = useState(true);
   const [timeoutDone,    setTimeoutDone]    = useState(false);
 
   const tEnter  = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -91,7 +81,6 @@ export function AwardBadge({ type, place, link }: AwardBadgeProps) {
   const tLeave2 = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tLeave3 = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /* ── Helpers ──────────────────────────────────────── */
   const rect = () => {
     const el = ref.current;
     if (!el) return { left: 0, right: 0, top: 0, bottom: 0 };
@@ -143,7 +132,6 @@ export function AwardBadge({ type, place, link }: AwardBadgeProps) {
     }).join(", ");
   };
 
-  /* ── Mouse handlers ───────────────────────────────── */
   const handleEnter = (e: MouseEvent<HTMLAnchorElement>) => {
     [tLeave1, tLeave2, tLeave3].forEach(t => t.current && clearTimeout(t.current));
     setAnimFrozen(true);
@@ -201,7 +189,6 @@ export function AwardBadge({ type, place, link }: AwardBadgeProps) {
     if (timeoutDone) setMatrix(currentMatrix);
   }, [currentMatrix, timeoutDone]);
 
-  /* ── Idle overlay keyframes ───────────────────────── */
   const keyframes = Array.from({ length: 10 }, (_, i) => `
     @keyframes driftOverlay${i + 1} {
       0%   { transform: rotate(${i * 10}deg); }
@@ -212,7 +199,6 @@ export function AwardBadge({ type, place, link }: AwardBadgeProps) {
 
   const bg = bgColors[(place ?? 2) - 1] ?? bgColors[1];
 
-  /* ── Render ───────────────────────────────────────── */
   return (
     <a
       ref={ref}
@@ -245,70 +231,59 @@ export function AwardBadge({ type, place, link }: AwardBadgeProps) {
             <mask id="driftMask">
               <rect width="260" height="54" fill="white" rx="10" />
             </mask>
-            {/* Subtle inner glow on dark bg */}
             <radialGradient id="bgGlow" cx="50%" cy="0%" r="80%">
-              <stop offset="0%"   stopColor="rgba(201,168,76,0.12)" />
+              <stop offset="0%"   stopColor="rgba(100,74,64,0.12)" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
           </defs>
 
-          {/* Badge body */}
           <rect width="260" height="54" rx="10" fill={bg} />
-
-          {/* Top edge glow */}
           <rect width="260" height="54" rx="10" fill="url(#bgGlow)" />
 
-          {/* Outer border — gold */}
           <rect
             x="0.5" y="0.5" width="259" height="53" rx="9.5"
             fill="transparent"
-            stroke="rgba(201,168,76,0.45)"
+            stroke="rgba(100,74,64,0.45)"
             strokeWidth="1"
           />
-          {/* Inner border — subtle */}
           <rect
             x="3.5" y="3.5" width="253" height="47" rx="7.5"
             fill="transparent"
-            stroke="rgba(201,168,76,0.15)"
+            stroke="rgba(100,74,64,0.15)"
             strokeWidth="0.75"
           />
 
-          {/* Top-edge shine line */}
           <line
             x1="12" y1="1" x2="248" y2="1"
-            stroke="rgba(255,245,210,0.18)"
+            stroke="rgba(255,235,210,0.18)"
             strokeWidth="1"
           />
 
-          {/* Label */}
           <text
             fontFamily="'Courier New', monospace"
             fontSize="7.5"
             fontWeight="bold"
             letterSpacing="1.5"
-            fill="rgba(201,168,76,0.7)"
+            fill="rgba(100,74,64,0.7)"
             x="52"
             y="21"
           >
             DRIFT AI
           </text>
 
-          {/* Title */}
           <text
             fontFamily="Georgia, 'Times New Roman', serif"
             fontSize="15"
             fontWeight="bold"
-            fill="rgba(232,201,122,0.95)"
+            fill="rgba(255,224,194,0.95)"
             x="52"
             y="40"
           >
             {badgeTitle[type]}{place ? ` #${place}` : ""}
           </text>
 
-          {/* Drift AI logomark */}
           <DriftMark />
 
-          {/* ── Gold-foil holographic overlays ──────── */}
           <g style={{ mixBlendMode: "overlay" }} mask="url(#driftMask)">
             {foilColors.map((color, i) => (
               <g

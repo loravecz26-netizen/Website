@@ -32,8 +32,8 @@ export default function TestimonialsSection() {
   const inView = useInView(ref, { once: true, margin: "-15%" });
 
   return (
-    <section ref={ref} className="relative py-32 px-6 md:px-10 bg-[#070705]">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,rgba(201,168,76,0.04),transparent)]" />
+    <section ref={ref} className="relative py-32 px-6 md:px-10 bg-muted">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,rgba(100,74,64,0.04),transparent)]" />
       <div className="section-divider w-full max-w-7xl mx-auto mb-24" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -43,7 +43,7 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
+          <p className="text-xs font-mono uppercase tracking-widest text-primary mb-4">
             Early Access Teams
           </p>
           <h2
@@ -63,25 +63,24 @@ export default function TestimonialsSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="relative p-8 rounded-2xl border border-[#c9a84c]/15 bg-[#0d0d0a] hover:border-[#c9a84c]/35 transition-all duration-300 group flex flex-col"
+              className="relative p-8 rounded-2xl border border-primary/15 bg-card hover:border-primary/35 transition-all duration-300 group flex flex-col"
             >
-              {/* Industry tag */}
-              <span className="inline-block mb-5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border border-[#c9a84c]/25 text-[#c9a84c]/70 self-start">
+              <span className="inline-block mb-5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border border-primary/25 text-primary/70 self-start">
                 {industry}
               </span>
 
               <span
-                className="text-5xl leading-none text-[#c9a84c]/15 group-hover:text-[#c9a84c]/30 transition-colors mb-2"
+                className="text-5xl leading-none text-primary/15 group-hover:text-primary/30 transition-colors mb-2"
                 style={{ fontFamily: "Georgia, serif" }}
               >
                 &ldquo;
               </span>
-              <p className="text-white/65 leading-relaxed text-sm flex-1 mb-6">
+              <p className="text-foreground/65 leading-relaxed text-sm flex-1 mb-6">
                 {quote}
               </p>
-              <div className="border-t border-[#c9a84c]/10 pt-4">
+              <div className="border-t border-primary/10 pt-4">
                 <p className="font-semibold text-sm">{name}</p>
-                <p className="text-xs text-[#c9a84c]/60 font-mono tracking-wide mt-0.5">{role}</p>
+                <p className="text-xs text-primary/60 font-mono tracking-wide mt-0.5">{role}</p>
               </div>
             </motion.div>
           ))}

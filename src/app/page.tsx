@@ -14,7 +14,7 @@ import Footer from "@/components/Footer";
 function PlatformSection() {
   return (
     <section id="platform" className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_0%,rgba(201,168,76,0.04),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_0%,rgba(100,74,64,0.04),transparent)]" />
       <div className="divider w-full max-w-7xl mx-auto mb-24" />
       <div className="max-w-7xl mx-auto px-6 md:px-10 mb-10 relative z-10">
         <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-3">

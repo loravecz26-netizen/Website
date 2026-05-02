@@ -71,8 +71,8 @@ export default function FeaturesSection() {
   const inView = useInView(ref, { once: true, margin: "-15%" });
 
   return (
-    <section ref={ref} id="solutions" className="relative py-32 px-6 md:px-10 bg-[#070705]">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_0%,rgba(201,168,76,0.04),transparent)]" />
+    <section ref={ref} id="solutions" className="relative py-32 px-6 md:px-10 bg-muted">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_0%,rgba(100,74,64,0.04),transparent)]" />
       <div className="section-divider w-full max-w-7xl mx-auto mb-24" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -82,7 +82,7 @@ export default function FeaturesSection() {
           transition={{ duration: 0.8 }}
           className="mb-16"
         >
-          <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
+          <p className="text-xs font-mono uppercase tracking-widest text-primary mb-4">
             Platform
           </p>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
@@ -94,32 +94,32 @@ export default function FeaturesSection() {
               <br />
               <span className="gold-text">Nothing you don&apos;t.</span>
             </h2>
-            <p className="text-white/40 max-w-sm text-sm leading-relaxed">
+            <p className="text-foreground/40 max-w-sm text-sm leading-relaxed">
               Drift AI is a complete platform — vault, AI engine, workflow builder,
               and integrations — all in one place.
             </p>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#c9a84c]/08 rounded-2xl overflow-hidden border border-[#c9a84c]/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-primary/8 rounded-2xl overflow-hidden border border-primary/10">
           {features.map(({ icon, title, description }, i) => (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="bg-[#070705] p-8 group hover:bg-[#0f0e0a] transition-colors duration-300"
+              className="bg-background p-8 group hover:bg-muted transition-colors duration-300"
             >
-              <div className="text-[#c9a84c]/60 group-hover:text-[#c9a84c] transition-colors duration-300 mb-5">
+              <div className="text-primary/60 group-hover:text-primary transition-colors duration-300 mb-5">
                 {icon}
               </div>
               <h3
-                className="text-lg font-bold mb-3 group-hover:text-[#c9a84c] transition-colors duration-300"
+                className="text-lg font-bold mb-3 group-hover:text-primary transition-colors duration-300"
                 style={{ fontFamily: "Georgia, serif" }}
               >
                 {title}
               </h3>
-              <p className="text-sm text-white/45 leading-relaxed">{description}</p>
+              <p className="text-sm text-foreground/45 leading-relaxed">{description}</p>
             </motion.div>
           ))}
         </div>

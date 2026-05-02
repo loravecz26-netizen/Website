@@ -10,7 +10,6 @@ import {
   Puzzle,
 } from "lucide-react";
 
-/* ─── Types ─────────────────────────────────────────── */
 export interface BentoItem {
   title: string;
   description: string;
@@ -27,7 +26,6 @@ interface BentoGridProps {
   items?: BentoItem[];
 }
 
-/* ─── Drift AI default items ────────────────────────── */
 const driftItems: BentoItem[] = [
   {
     title: "Knowledge Vault",
@@ -95,7 +93,6 @@ const driftItems: BentoItem[] = [
   },
 ];
 
-/* ════════════════════════════════════════════════════ */
 export function BentoGrid({ items = driftItems }: BentoGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 max-w-7xl mx-auto">
@@ -103,104 +100,87 @@ export function BentoGrid({ items = driftItems }: BentoGridProps) {
         <div
           key={index}
           className={cn(
-            /* layout */
             "group relative p-5 rounded-2xl overflow-hidden transition-all duration-300",
-            /* base glass card */
-            "border border-[#c9a84c]/12 bg-[#0d0d0a]",
-            /* hover lift + glow */
-            "hover:shadow-[0_0_0_1px_rgba(201,168,76,0.2),0_8px_32px_rgba(201,168,76,0.08)]",
+            "border border-primary/12 bg-card",
+            "hover:shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_20%,transparent),0_8px_32px_color-mix(in_srgb,var(--primary)_8%,transparent)]",
             "hover:-translate-y-0.5 will-change-transform",
-            /* persistent hover variant */
             item.hasPersistentHover && [
               "-translate-y-0.5",
-              "shadow-[0_0_0_1px_rgba(201,168,76,0.18),0_8px_32px_rgba(201,168,76,0.07)]",
+              "shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_18%,transparent),0_8px_32px_color-mix(in_srgb,var(--primary)_7%,transparent)]",
             ],
-            /* col span */
             item.colSpan === 2 ? "md:col-span-2" : "col-span-1",
           )}
         >
-          {/* ── Dot-grid texture (shows on hover / persistent) ── */}
+          {/* Dot-grid texture */}
           <div
             className={cn(
               "absolute inset-0 transition-opacity duration-300",
-              item.hasPersistentHover
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100",
+              item.hasPersistentHover ? "opacity-100" : "opacity-0 group-hover:opacity-100",
             )}
           >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,168,76,0.06)_1px,transparent_1px)] bg-[length:18px_18px]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(100,74,64,0.06)_1px,transparent_1px)] bg-[length:18px_18px]" />
           </div>
 
-          {/* ── Top-edge gold shine ─────────────────────────── */}
+          {/* Top-edge shine */}
           <div
             className={cn(
               "absolute top-0 left-[15%] right-[15%] h-px transition-opacity duration-300",
-              "bg-gradient-to-r from-transparent via-[#c9a84c]/40 to-transparent",
-              item.hasPersistentHover
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100",
+              "bg-gradient-to-r from-transparent via-primary/40 to-transparent",
+              item.hasPersistentHover ? "opacity-100" : "opacity-0 group-hover:opacity-100",
             )}
           />
 
-          {/* ── Card content ────────────────────────────────── */}
           <div className="relative flex flex-col space-y-3">
-
-            {/* Header row */}
             <div className="flex items-center justify-between">
-              {/* Icon */}
               <div
                 className={cn(
                   "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300",
-                  "bg-[#c9a84c]/10 text-[#c9a84c]/70",
-                  "group-hover:bg-[#c9a84c]/20 group-hover:text-[#c9a84c]",
+                  "bg-primary/10 text-primary/70",
+                  "group-hover:bg-primary/20 group-hover:text-primary",
                 )}
               >
                 {item.icon}
               </div>
 
-              {/* Status badge */}
               <span
                 className={cn(
                   "text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full",
-                  "bg-[#c9a84c]/08 text-[#c9a84c]/60 border border-[#c9a84c]/15",
+                  "bg-primary/8 text-primary/60 border border-primary/15",
                   "transition-colors duration-300",
-                  "group-hover:bg-[#c9a84c]/15 group-hover:text-[#c9a84c]/90 group-hover:border-[#c9a84c]/30",
+                  "group-hover:bg-primary/15 group-hover:text-primary/90 group-hover:border-primary/30",
                 )}
               >
                 {item.status ?? "Active"}
               </span>
             </div>
 
-            {/* Title + description */}
             <div className="space-y-2">
               <h3
-                className="font-semibold text-white/90 tracking-tight text-[15px] group-hover:text-white transition-colors duration-200"
+                className="font-semibold text-foreground/90 tracking-tight text-[15px] group-hover:text-foreground transition-colors duration-200"
                 style={{ fontFamily: "Georgia, serif" }}
               >
                 {item.title}
                 {item.meta && (
-                  <span className="ml-2 text-[11px] text-[#c9a84c]/50 font-mono font-normal tracking-wide">
+                  <span className="ml-2 text-[11px] text-primary/50 font-mono font-normal tracking-wide">
                     {item.meta}
                   </span>
                 )}
               </h3>
-              <p className="text-sm text-white/45 leading-relaxed group-hover:text-white/60 transition-colors duration-200">
+              <p className="text-sm text-foreground/45 leading-relaxed group-hover:text-foreground/60 transition-colors duration-200">
                 {item.description}
               </p>
             </div>
 
-            {/* Footer row */}
-            <div className="flex items-center justify-between mt-1 pt-2 border-t border-[#c9a84c]/08 group-hover:border-[#c9a84c]/15 transition-colors duration-300">
-              {/* Tags */}
+            <div className="flex items-center justify-between mt-1 pt-2 border-t border-primary/8 group-hover:border-primary/15 transition-colors duration-300">
               <div className="flex items-center flex-wrap gap-1.5">
                 {item.tags?.map((tag, i) => (
                   <span
                     key={i}
                     className={cn(
                       "px-2 py-0.5 rounded-md text-[10px] font-mono tracking-wide",
-                      "bg-[#c9a84c]/06 text-[#c9a84c]/55 border border-[#c9a84c]/10",
+                      "bg-primary/6 text-primary/55 border border-primary/10",
                       "transition-all duration-200",
-                      "hover:bg-[#c9a84c]/12 hover:text-[#c9a84c]/80",
+                      "hover:bg-primary/12 hover:text-primary/80",
                     )}
                   >
                     {tag}
@@ -208,21 +188,17 @@ export function BentoGrid({ items = driftItems }: BentoGridProps) {
                 ))}
               </div>
 
-              {/* CTA */}
-              <span className="text-[11px] font-mono text-[#c9a84c]/0 group-hover:text-[#c9a84c]/70 transition-all duration-300 whitespace-nowrap ml-3 flex-shrink-0">
+              <span className="text-[11px] font-mono text-primary/0 group-hover:text-primary/70 transition-all duration-300 whitespace-nowrap ml-3 flex-shrink-0">
                 {item.cta ?? "Explore →"}
               </span>
             </div>
           </div>
 
-          {/* ── Gradient border glow (behind card) ─────────── */}
           <div
             className={cn(
               "absolute inset-0 -z-10 rounded-2xl",
-              "bg-gradient-to-br from-[#c9a84c]/0 via-[#c9a84c]/04 to-[#c9a84c]/0",
-              item.hasPersistentHover
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100",
+              "bg-gradient-to-br from-primary/0 via-primary/4 to-primary/0",
+              item.hasPersistentHover ? "opacity-100" : "opacity-0 group-hover:opacity-100",
               "transition-opacity duration-300",
             )}
           />
