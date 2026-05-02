@@ -62,7 +62,10 @@ export default function HowItWorks() {
 
   return (
     <section ref={ref} id="how-it-works" className="relative py-32 px-6 md:px-10">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(201,168,76,0.05),transparent)]" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--primary) 5%, transparent), transparent)" }}
+      />
       <div className="section-divider w-full max-w-7xl mx-auto mb-24" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -73,7 +76,7 @@ export default function HowItWorks() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
+          <p className="text-xs font-mono uppercase tracking-widest text-primary mb-4">
             How It Works
           </p>
           <h2
@@ -94,10 +97,13 @@ export default function HowItWorks() {
               initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="group relative rounded-2xl border border-[#c9a84c]/12 bg-[#0d0d0a] hover:border-[#c9a84c]/30 transition-all duration-300 overflow-hidden"
+              className="group relative rounded-2xl border border-primary/[0.12] bg-card hover:border-primary/30 transition-all duration-300 overflow-hidden"
             >
               {/* Hover glow */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_60%_at_0%_50%,rgba(201,168,76,0.04),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "radial-gradient(ellipse 40% 60% at 0% 50%, color-mix(in srgb, var(--primary) 4%, transparent), transparent)" }}
+              />
 
               <div className="relative p-8 md:p-10 grid md:grid-cols-[auto_1fr_auto] gap-8 md:gap-12 items-start">
                 {/* Step number */}
@@ -112,30 +118,30 @@ export default function HowItWorks() {
 
                 {/* Main content */}
                 <div>
-                  <div className="flex items-center gap-3 mb-2 text-[#c9a84c]">
+                  <div className="flex items-center gap-3 mb-2 text-primary">
                     {icon}
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#c9a84c]/70">
+                    <span className="text-xs font-mono uppercase tracking-widest text-primary/70">
                       {subtitle}
                     </span>
                   </div>
                   <h3
-                    className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-[#e8c97a] transition-colors duration-300"
+                    className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors duration-300"
                     style={{ fontFamily: "Georgia, serif" }}
                   >
                     {title}
                   </h3>
-                  <p className="text-white/55 leading-relaxed max-w-2xl">{description}</p>
+                  <p className="text-foreground/55 leading-relaxed max-w-2xl">{description}</p>
                 </div>
 
                 {/* Examples */}
                 <div className="md:min-w-[220px]">
-                  <p className="text-xs font-mono uppercase tracking-widest text-white/25 mb-3">
+                  <p className="text-xs font-mono uppercase tracking-widest text-foreground/25 mb-3">
                     Examples
                   </p>
                   <ul className="space-y-2">
                     {examples.map((ex) => (
-                      <li key={ex} className="flex items-start gap-2 text-sm text-white/45">
-                        <span className="text-[#c9a84c]/50 mt-0.5 flex-shrink-0">→</span>
+                      <li key={ex} className="flex items-start gap-2 text-sm text-foreground/45">
+                        <span className="text-primary/50 mt-0.5 flex-shrink-0">→</span>
                         {ex}
                       </li>
                     ))}

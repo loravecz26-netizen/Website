@@ -8,7 +8,7 @@ function Ring({ size, duration, delay, opacity, dashed }: {
 }) {
   return (
     <div
-      className="absolute rounded-full border border-[#c9a84c] pointer-events-none"
+      className="absolute rounded-full border border-primary pointer-events-none"
       style={{
         width: size, height: size,
         top: "50%", left: "50%",
@@ -24,11 +24,11 @@ function Ring({ size, duration, delay, opacity, dashed }: {
 
 /* Vault document cards orbiting the sphere */
 const vaultDocs = [
-  { label: "SEC Rule 10b-5",  angle: 0,    color: "#c9a84c" },
-  { label: "HIPAA §164.514", angle: 72,   color: "#e8c97a" },
-  { label: "IRS §1031",       angle: 144,  color: "#c9a84c" },
-  { label: "FINRA Rule 2010", angle: 216,  color: "#e8c97a" },
-  { label: "ADA Title III",   angle: 288,  color: "#c9a84c" },
+  { label: "SEC Rule 10b-5",  angle: 0   },
+  { label: "HIPAA §164.514", angle: 72  },
+  { label: "IRS §1031",       angle: 144 },
+  { label: "FINRA Rule 2010", angle: 216 },
+  { label: "ADA Title III",   angle: 288 },
 ];
 
 export default function DriftOrb() {
@@ -70,7 +70,7 @@ export default function DriftOrb() {
             ctx.beginPath();
             ctx.moveTo(ax, ay);
             ctx.lineTo(bx, by);
-            ctx.strokeStyle = `rgba(201,168,76,${(1 - dist / 110) * 0.25})`;
+            ctx.strokeStyle = `rgba(255,224,194,${(1 - dist / 110) * 0.25})`;
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -82,7 +82,7 @@ export default function DriftOrb() {
         const ny = cy + Math.sin(p.angle + t * p.speed) * (p.radius * 0.42);
         ctx.beginPath();
         ctx.arc(nx, ny, 1.8, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(232,201,122,0.75)";
+        ctx.fillStyle = "rgba(255,224,194,0.75)";
         ctx.fill();
       }
 
@@ -95,7 +95,10 @@ export default function DriftOrb() {
 
   return (
     <section ref={ref} id="vault" className="relative py-32 flex flex-col items-center overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,rgba(201,168,76,0.06),transparent)]" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 60% at 50% 50%, color-mix(in srgb, var(--primary) 6%, transparent), transparent)" }}
+      />
       <div className="section-divider w-full max-w-7xl mx-auto mb-24" />
 
       <motion.div
@@ -104,7 +107,7 @@ export default function DriftOrb() {
         transition={{ duration: 0.8 }}
         className="text-center mb-20 px-6"
       >
-        <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
+        <p className="text-xs font-mono uppercase tracking-widest text-primary mb-4">
           The Vault
         </p>
         <h2
@@ -115,7 +118,7 @@ export default function DriftOrb() {
           <br />
           <span className="gold-text">Infinitely searchable.</span>
         </h2>
-        <p className="mt-6 text-white/45 text-lg max-w-xl mx-auto leading-relaxed">
+        <p className="mt-6 text-foreground/45 text-lg max-w-xl mx-auto leading-relaxed">
           Fill your Vault with regulations, filings, case studies, internal docs — anything your
           team needs to reason from. Drift AI reads it all and cites its sources.
         </p>
@@ -138,24 +141,24 @@ export default function DriftOrb() {
 
         {/* Vault core */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 md:w-36 md:h-36">
-          <div className="absolute inset-0 rounded-full bg-[#c9a84c]/20 blur-2xl" />
+          <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
           <div
             className="absolute inset-2 rounded-full orb-glow floating"
-            style={{ background: "radial-gradient(circle at 35% 35%, #f0d882, #c9a84c 50%, #6b4c0a)" }}
+            style={{ background: "radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--primary) 80%, white), var(--primary) 50%, color-mix(in srgb, var(--primary) 60%, black))" }}
           />
           <div className="absolute top-[18%] left-[20%] w-[32%] h-[18%] rounded-full bg-white/40 blur-sm" />
           {/* Vault icon */}
           <div className="absolute inset-0 flex items-center justify-center">
             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" className="opacity-60">
-              <rect x="5" y="8" width="26" height="20" rx="3" stroke="#0a0a0a" strokeWidth="2"/>
-              <circle cx="18" cy="18" r="5" stroke="#0a0a0a" strokeWidth="2"/>
-              <path d="M18 13v-5M18 28v-5M8 18H5M31 18h-3" stroke="#0a0a0a" strokeWidth="1.5" strokeLinecap="round"/>
+              <rect x="5" y="8" width="26" height="20" rx="3" stroke="var(--primary-foreground)" strokeWidth="2"/>
+              <circle cx="18" cy="18" r="5" stroke="var(--primary-foreground)" strokeWidth="2"/>
+              <path d="M18 13v-5M18 28v-5M8 18H5M31 18h-3" stroke="var(--primary-foreground)" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </div>
         </div>
 
         {/* Orbiting doc tags */}
-        {vaultDocs.map(({ label, angle, color }, i) => {
+        {vaultDocs.map(({ label, angle }, i) => {
           const rad = (angle * Math.PI) / 180;
           const r = 175;
           const x = 50 + (Math.cos(rad) * r) / 4.8;
@@ -170,9 +173,9 @@ export default function DriftOrb() {
               style={{
                 left: `${x}%`,
                 top: `${y}%`,
-                color,
-                borderColor: `${color}40`,
-                backgroundColor: `${color}10`,
+                color: "var(--primary)",
+                borderColor: "color-mix(in srgb, var(--primary) 40%, transparent)",
+                backgroundColor: "color-mix(in srgb, var(--primary) 10%, transparent)",
                 fontSize: "0.6rem",
                 letterSpacing: "0.05em",
               }}
@@ -196,8 +199,8 @@ export default function DriftOrb() {
           { label: "Always Private", desc: "Your Vault never trains anyone else" },
         ].map(({ label, desc }) => (
           <div key={label} className="flex flex-col gap-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#c9a84c]">{label}</span>
-            <span className="text-sm text-white/45 leading-relaxed">{desc}</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-primary">{label}</span>
+            <span className="text-sm text-foreground/45 leading-relaxed">{desc}</span>
           </div>
         ))}
       </motion.div>

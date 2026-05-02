@@ -87,7 +87,7 @@ export default function HeroSection() {
 
       /* Scene */
       refs.scene = new THREE.Scene();
-      refs.scene.fog = new THREE.FogExp2(0x000000, 0.00022);
+      refs.scene.fog = new THREE.FogExp2(0x080604, 0.00022);
 
       /* Camera */
       refs.camera = new THREE.PerspectiveCamera(
@@ -146,8 +146,8 @@ export default function HeroSection() {
           const c = new THREE.Color();
           const roll = Math.random();
           if (roll < 0.65)       c.setHSL(0,    0,    0.82 + Math.random() * 0.18); // warm white
-          else if (roll < 0.88)  c.setHSL(0.1,  0.65, 0.80);                        // gold
-          else                   c.setHSL(0.08, 0.45, 0.90);                        // amber
+          else if (roll < 0.88)  c.setHSL(0.07, 0.85, 0.88);                        // warm peach
+          else                   c.setHSL(0.05, 0.60, 0.92);                        // soft cream
           col[j * 3] = c.r; col[j * 3 + 1] = c.g; col[j * 3 + 2] = c.b;
           sizes[j] = Math.random() * 1.8 + 0.4;
         }
@@ -204,8 +204,8 @@ export default function HeroSection() {
       const mat  = new THREE.ShaderMaterial({
         uniforms: {
           time:    { value: 0 },
-          color1:  { value: new THREE.Color(0xc9a84c) }, // gold
-          color2:  { value: new THREE.Color(0x3d1a00) }, // dark amber
+          color1:  { value: new THREE.Color(0xffe0c2) }, // warm peach (dark-mode primary)
+          color2:  { value: new THREE.Color(0x393028) }, // dark secondary
           opacity: { value: 0.28 },
         },
         vertexShader: `
@@ -252,10 +252,10 @@ export default function HeroSection() {
     const buildMountains = () => {
       const refs = three.current;
       const LAYERS = [
-        { z: -50,  h: 60,  color: 0x1a1710, op: 1.0 },
-        { z: -100, h: 80,  color: 0x12100a, op: 0.85 },
-        { z: -150, h: 100, color: 0x0a0d15, op: 0.65 },
-        { z: -200, h: 120, color: 0x050708, op: 0.45 },
+        { z: -50,  h: 60,  color: 0x1a1612, op: 1.0 },
+        { z: -100, h: 80,  color: 0x120f0b, op: 0.85 },
+        { z: -150, h: 100, color: 0x0c0a08, op: 0.65 },
+        { z: -200, h: 120, color: 0x060504, op: 0.45 },
       ];
 
       LAYERS.forEach((layer, idx) => {
@@ -308,8 +308,8 @@ export default function HeroSection() {
           uniform float time;
           void main() {
             float i = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            // Gold atmosphere
-            vec3 atm = vec3(0.79, 0.66, 0.30) * i;
+            // Warm peach atmosphere
+            vec3 atm = vec3(1.0, 0.878, 0.761) * i;
             atm *= sin(time * 1.8) * 0.1 + 0.9;
             gl_FragColor = vec4(atm, i * 0.22);
           }
@@ -526,13 +526,13 @@ export default function HeroSection() {
                 style={{
                   padding: "0.85rem 2.2rem",
                   borderRadius: "9999px",
-                  background: "linear-gradient(135deg, #c9a84c, #e8c97a)",
-                  color: "#09090b",
+                  background: "var(--primary)",
+                  color: "var(--primary-foreground)",
                   fontWeight: 700,
                   fontSize: "0.9rem",
                   letterSpacing: "0.04em",
                   textDecoration: "none",
-                  boxShadow: "0 0 32px rgba(201,168,76,0.45)",
+                  boxShadow: "0 0 32px color-mix(in srgb, var(--primary) 45%, transparent)",
                 }}
               >
                 Get Early Access
@@ -542,8 +542,8 @@ export default function HeroSection() {
                 style={{
                   padding: "0.85rem 2.2rem",
                   borderRadius: "9999px",
-                  border: "1px solid rgba(201,168,76,0.35)",
-                  color: "rgba(255,255,255,0.75)",
+                  border: "1px solid color-mix(in srgb, var(--primary) 35%, transparent)",
+                  color: "color-mix(in srgb, var(--foreground) 75%, transparent)",
                   fontSize: "0.9rem",
                   letterSpacing: "0.04em",
                   textDecoration: "none",

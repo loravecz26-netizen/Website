@@ -57,7 +57,10 @@ export default function IndustriesSection() {
 
   return (
     <section ref={ref} id="solutions" className="relative py-32 px-6 md:px-10">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_100%,rgba(201,168,76,0.05),transparent)]" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 100%, color-mix(in srgb, var(--primary) 5%, transparent), transparent)" }}
+      />
       <div className="section-divider w-full max-w-7xl mx-auto mb-24" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -68,7 +71,7 @@ export default function IndustriesSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c] mb-4">
+          <p className="text-xs font-mono uppercase tracking-widest text-primary mb-4">
             Built for Every Field
           </p>
           <h2
@@ -95,8 +98,8 @@ export default function IndustriesSection() {
                 onClick={() => setActive(i)}
                 className={`flex-shrink-0 lg:w-full text-left px-5 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                   active === i
-                    ? "bg-[#c9a84c]/15 border border-[#c9a84c]/40 text-[#e8c97a]"
-                    : "border border-transparent text-white/40 hover:text-white/70 hover:bg-white/5"
+                    ? "bg-primary/15 border border-primary/40 text-primary"
+                    : "border border-transparent text-foreground/40 hover:text-foreground/70 hover:bg-foreground/5"
                 }`}
                 style={active === i ? { fontFamily: "Georgia, serif" } : {}}
               >
@@ -111,9 +114,9 @@ export default function IndustriesSection() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-[#c9a84c]/15 bg-[#0d0d0a] p-8 md:p-10"
+            className="rounded-2xl border border-primary/15 bg-card p-8 md:p-10"
           >
-            <p className="text-xs font-mono uppercase tracking-widest text-[#c9a84c]/60 mb-2">
+            <p className="text-xs font-mono uppercase tracking-widest text-primary/60 mb-2">
               {current.role}
             </p>
             <h3
@@ -125,26 +128,26 @@ export default function IndustriesSection() {
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               <div>
-                <p className="text-xs font-mono uppercase tracking-widest text-white/30 mb-3">
+                <p className="text-xs font-mono uppercase tracking-widest text-foreground/30 mb-3">
                   Vault Contents
                 </p>
                 <ul className="space-y-2">
                   {current.vault.map((v) => (
-                    <li key={v} className="flex items-center gap-2.5 text-sm text-white/55">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#c9a84c]/50 flex-shrink-0" />
+                    <li key={v} className="flex items-center gap-2.5 text-sm text-foreground/55">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/50 flex-shrink-0" />
                       {v}
                     </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <p className="text-xs font-mono uppercase tracking-widest text-white/30 mb-3">
+                <p className="text-xs font-mono uppercase tracking-widest text-foreground/30 mb-3">
                   Automated Workflows
                 </p>
                 <ul className="space-y-2">
                   {current.workflows.map((w) => (
-                    <li key={w} className="flex items-center gap-2.5 text-sm text-white/55">
-                      <span className="text-[#c9a84c]/50 flex-shrink-0">→</span>
+                    <li key={w} className="flex items-center gap-2.5 text-sm text-foreground/55">
+                      <span className="text-primary/50 flex-shrink-0">→</span>
                       {w}
                     </li>
                   ))}
@@ -153,7 +156,7 @@ export default function IndustriesSection() {
             </div>
 
             <blockquote
-              className="border-l-2 border-[#c9a84c]/40 pl-5 text-white/60 italic text-sm leading-relaxed"
+              className="border-l-2 border-primary/40 pl-5 text-foreground/60 italic text-sm leading-relaxed"
               style={{ fontFamily: "Georgia, serif" }}
             >
               &ldquo;{current.quote}&rdquo;
