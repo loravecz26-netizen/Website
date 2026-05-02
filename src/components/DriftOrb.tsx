@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { Typewriter } from "@/components/Typewriter";
 
 function Ring({ size, duration, delay, opacity, dashed }: {
   size: number; duration: number; delay: number; opacity: number; dashed?: boolean;
@@ -119,8 +120,17 @@ export default function DriftOrb() {
           <span className="gold-text">Infinitely searchable.</span>
         </h2>
         <p className="mt-6 text-foreground/45 text-lg max-w-xl mx-auto leading-relaxed">
-          Fill your Vault with regulations, filings, case studies, internal docs — anything your
-          team needs to reason from. Drift AI reads it all and cites its sources.
+          {inView && (
+            <Typewriter
+              text="Fill your Vault with regulations, filings, case studies, internal docs — anything your team needs to reason from. Drift AI reads it all and cites its sources."
+              speed={22}
+              initialDelay={600}
+              loop={false}
+              showCursor={true}
+              cursorChar={<span className="text-primary">|</span>}
+              hideCursorOnType={true}
+            />
+          )}
         </p>
       </motion.div>
 

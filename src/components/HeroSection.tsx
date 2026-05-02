@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { HoverBorderGradient } from "@/components/HoverBorderGradient";
+import { Typewriter } from "@/components/Typewriter";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,7 +50,6 @@ export default function HeroSection() {
   const stickyRef      = useRef<HTMLDivElement>(null);
   const canvasRef      = useRef<HTMLCanvasElement>(null);
   const titleRef       = useRef<HTMLHeadingElement>(null);
-  const subtitleRef    = useRef<HTMLDivElement>(null);
   const progressRef    = useRef<HTMLDivElement>(null);
   const menuRef        = useRef<HTMLDivElement>(null);
 
@@ -399,10 +399,6 @@ export default function HeroSection() {
       const chars = titleRef.current.querySelectorAll(".tc");
       tl.from(chars, { y: 180, opacity: 0, duration: 1.4, stagger: 0.055, ease: "power4.out" }, "-=0.5");
     }
-    if (subtitleRef.current) {
-      const lines = subtitleRef.current.querySelectorAll(".sl");
-      tl.from(lines, { y: 40, opacity: 0, duration: 0.9, stagger: 0.18, ease: "power3.out" }, "-=0.8");
-    }
     if (progressRef.current) {
       tl.from(progressRef.current, { opacity: 0, y: 30, duration: 0.8, ease: "power2.out" }, "-=0.5");
     }
@@ -413,18 +409,12 @@ export default function HeroSection() {
   /* ── Title transition when section changes ───────────── */
   useEffect(() => {
     if (!isReady || section === prevSection) return;
-    if (!titleRef.current || !subtitleRef.current) return;
+    if (!titleRef.current) return;
 
     const chars = titleRef.current.querySelectorAll(".tc");
-    const lines = subtitleRef.current.querySelectorAll(".sl");
-
     gsap.fromTo(chars,
       { y: section > prevSection ? 60 : -60, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, stagger: 0.04, ease: "power3.out" }
-    );
-    gsap.fromTo(lines,
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, stagger: 0.15, delay: 0.2, ease: "power2.out" }
     );
 
     setPrevSection(section);
@@ -514,9 +504,31 @@ export default function HeroSection() {
             ))}
           </h1>
 
-          <div ref={subtitleRef} className="hero-sub-3d">
-            <p className="sl">{cur.line1}</p>
-            <p className="sl">{cur.line2}</p>
+          <div className="hero-sub-3d">
+            <p className="sl">
+              <Typewriter
+                key={`${section}-line1`}
+                text={cur.line1}
+                speed={38}
+                initialDelay={section === 0 ? 1100 : 250}
+                loop={false}
+                showCursor={false}
+                className="text-[length:inherit] tracking-[inherit]"
+              />
+            </p>
+            <p className="sl">
+              <Typewriter
+                key={`${section}-line2`}
+                text={cur.line2}
+                speed={38}
+                initialDelay={section === 0 ? 1400 : 450}
+                loop={false}
+                showCursor={true}
+                cursorChar={<span className="text-primary">|</span>}
+                hideCursorOnType={true}
+                className="text-[length:inherit] tracking-[inherit]"
+              />
+            </p>
           </div>
 
           {/* CTA — only on first section */}

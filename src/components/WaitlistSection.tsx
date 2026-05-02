@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { HoverBorderGradient } from "@/components/HoverBorderGradient";
+import { Typewriter } from "@/components/Typewriter";
 
 export default function WaitlistSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,9 +55,25 @@ export default function WaitlistSection() {
             <br />
             <span className="gold-text">starts here.</span>
           </h2>
-          <p className="text-foreground/50 mb-12 text-lg leading-relaxed">
-            Join the waitlist for early access. Founding teams get free onboarding,
-            custom Vault setup, and lifetime pricing locked in.
+          <p className="text-foreground/50 mb-12 text-lg leading-relaxed min-h-[3.5rem]">
+            {inView && (
+              <Typewriter
+                text={[
+                  "Founding teams get free onboarding and custom Vault setup.",
+                  "Lifetime pricing locked in — no surprises, ever.",
+                  "Your data stays yours. Private vault, zero training.",
+                  "Go live in days, not months.",
+                ]}
+                speed={35}
+                deleteSpeed={18}
+                waitTime={2800}
+                initialDelay={400}
+                loop={true}
+                showCursor={true}
+                cursorChar={<span className="text-primary">|</span>}
+                hideCursorOnType={false}
+              />
+            )}
           </p>
 
           {submitted ? (
