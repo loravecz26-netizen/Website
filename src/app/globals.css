@@ -300,3 +300,125 @@ body {
 /* ── Pointer events on CTAs ───────────────────────────── */
 .hero-cta-row { pointer-events: all; }
 .hero-cta-row a:hover { opacity: 0.85; transform: translateY(-1px); transition: all .2s ease; }
+
+/* ═══════════════════════════════════════════════════════
+   CardCanvas + Glow Card
+   ═══════════════════════════════════════════════════════ */
+
+.card-canvas {
+  position: relative;
+}
+
+.card-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    rgba(201, 168, 76, 0.025) 0%,
+    transparent 70%
+  );
+}
+
+/* filter: url(#unopaq) amplifies the alpha of blurred border elements,
+   turning a soft blur into a sharp crisp glow line. Solid-alpha content
+   (text, backgrounds) is unaffected since alpha 1.0 × 3 clamps to 1.0. */
+.glow-card {
+  position: relative;
+  filter: url(#unopaq);
+  border-radius: 1rem;
+  background: #0d0d0a;
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  overflow: visible;
+}
+
+.border-element {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  filter: blur(5px);
+}
+
+/* Vertical sweepers (left / right) */
+.border-left {
+  left: 0;
+  top: 0;
+  width: 1.5px;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #c9a84c 35%,
+    #e8c97a 50%,
+    #c9a84c 65%,
+    transparent 100%
+  );
+  animation: glow-sweep-v 3s ease-in-out infinite;
+}
+
+.border-right {
+  right: 0;
+  top: 0;
+  width: 1.5px;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #c9a84c 35%,
+    #e8c97a 50%,
+    #c9a84c 65%,
+    transparent 100%
+  );
+  animation: glow-sweep-v 3s ease-in-out infinite 1.5s;
+}
+
+/* Horizontal sweepers (top / bottom) */
+.border-top {
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    #c9a84c 35%,
+    #e8c97a 50%,
+    #c9a84c 65%,
+    transparent 100%
+  );
+  animation: glow-sweep-h 3s ease-in-out infinite 0.75s;
+}
+
+.border-bottom {
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    #c9a84c 35%,
+    #e8c97a 50%,
+    #c9a84c 65%,
+    transparent 100%
+  );
+  animation: glow-sweep-h 3s ease-in-out infinite 2.25s;
+}
+
+/* translateY/X uses % of the element's own dimension.
+   Element is 40% of card size, so 110% overshoot clears the near edge
+   and 265% × 40% = 106% of card size clears the far edge. */
+@keyframes glow-sweep-v {
+  0%   { transform: translateY(-110%); }
+  100% { transform: translateY(265%);  }
+}
+
+@keyframes glow-sweep-h {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(265%);  }
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+}
