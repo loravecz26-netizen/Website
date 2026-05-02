@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { AwardBadge } from "@/components/AwardBadge";
 
 export default function WaitlistSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -91,6 +92,23 @@ export default function WaitlistSection() {
           <p className="mt-6 text-xs text-white/25 font-mono tracking-wide">
             No spam. No credit card. Just early access.
           </p>
+
+          {/* Award badges */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-14 flex flex-col items-center gap-3"
+          >
+            <p className="text-xs font-mono uppercase tracking-widest text-white/20 mb-2">
+              Recognition
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <AwardBadge type="product-of-the-week"  place={1} />
+              <AwardBadge type="product-of-the-day"   place={1} />
+              <AwardBadge type="ai-pioneer" />
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
