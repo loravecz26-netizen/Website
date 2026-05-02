@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { HoverBorderGradient } from "@/components/HoverBorderGradient";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -520,23 +521,15 @@ export default function HeroSection() {
 
           {/* CTA — only on first section */}
           {section === 0 && (
-            <div className="hero-cta-row" style={{ marginTop: "2.5rem", display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <a
+            <div className="hero-cta-row" style={{ marginTop: "2.5rem", display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
+              <HoverBorderGradient
+                as="a"
                 href="#waitlist"
-                style={{
-                  padding: "0.85rem 2.2rem",
-                  borderRadius: "9999px",
-                  background: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                  fontWeight: 700,
-                  fontSize: "0.9rem",
-                  letterSpacing: "0.04em",
-                  textDecoration: "none",
-                  boxShadow: "0 0 32px color-mix(in srgb, var(--primary) 45%, transparent)",
-                }}
+                duration={1.2}
+                className="text-sm font-bold tracking-[0.04em] text-foreground px-6 py-2.5"
               >
                 Get Early Access
-              </a>
+              </HoverBorderGradient>
               <a
                 href="#how-it-works"
                 style={{

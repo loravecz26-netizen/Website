@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { HoverBorderGradient } from "@/components/HoverBorderGradient";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -57,12 +58,15 @@ export default function Navbar() {
           >
             Sign in
           </Link>
-          <Link
+          <HoverBorderGradient
+            as={Link}
             href="#waitlist"
-            className="text-sm px-4 py-2 rounded-full bg-primary text-primary-foreground font-semibold hover:brightness-110 transition-all duration-200"
+            duration={1.5}
+            className="text-sm font-semibold text-foreground px-1 py-0"
+            containerClassName="h-9"
           >
             Get Early Access
-          </Link>
+          </HoverBorderGradient>
         </div>
       </div>
     </nav>

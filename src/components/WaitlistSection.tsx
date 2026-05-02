@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { HoverBorderGradient } from "@/components/HoverBorderGradient";
 
 export default function WaitlistSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -72,7 +73,7 @@ export default function WaitlistSection() {
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto items-center"
             >
               <input
                 type="email"
@@ -80,15 +81,16 @@ export default function WaitlistSection() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@company.com"
-                className="flex-1 px-5 py-4 rounded-full bg-foreground/5 border border-foreground/10 text-foreground placeholder-foreground/30 text-sm outline-none focus:border-primary/50 transition-colors"
+                className="flex-1 w-full px-5 py-4 rounded-full bg-foreground/5 border border-foreground/10 text-foreground placeholder-foreground/30 text-sm outline-none focus:border-primary/50 transition-colors"
               />
-              <button
+              <HoverBorderGradient
+                as="button"
                 type="submit"
-                className="px-7 py-4 rounded-full bg-primary text-primary-foreground text-sm font-bold tracking-wide hover:brightness-110 transition-all whitespace-nowrap"
-                style={{ boxShadow: "0 0 30px color-mix(in srgb, var(--primary) 30%, transparent)" }}
+                duration={1.2}
+                className="text-sm font-bold tracking-wide text-foreground px-6 py-2.5 whitespace-nowrap"
               >
                 Join Waitlist
-              </button>
+              </HoverBorderGradient>
             </form>
           )}
 
