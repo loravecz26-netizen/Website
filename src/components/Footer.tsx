@@ -1,42 +1,123 @@
-export default function Footer() {
-  return (
-    <footer className="relative border-t border-[#c9a84c]/15 bg-[#070705] py-16 px-6 md:px-10">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex-shrink-0"
-              style={{
-                background: "radial-gradient(circle at 35% 35%, #f0d882, #c9a84c 50%, #6b4c0a)",
-              }}
-            />
-            <span
-              className="text-xl font-bold gold-text"
-              style={{ fontFamily: "Georgia, serif" }}
-            >
-              Drift AI
-            </span>
-          </div>
+'use client';
+import React from 'react';
+import type { ComponentProps, ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { FacebookIcon, FrameIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from 'lucide-react';
 
-          {/* Links */}
-          <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/40">
-            {["Product", "Pricing", "Docs", "Blog", "Privacy", "Terms"].map((l) => (
-              <a key={l} href="#" className="hover:text-[#c9a84c] transition-colors">
-                {l}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="section-divider mb-8" />
-
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/25 font-mono">
-          <span>© {new Date().getFullYear()} Drift AI, Inc. All rights reserved.</span>
-          <span className="tracking-widest uppercase">
-            Your vault · Your AI · Your workflows
-          </span>
-        </div>
-      </div>
-    </footer>
-  );
+interface FooterLink {
+	title: string;
+	href: string;
+	icon?: React.ComponentType<{ className?: string }>;
 }
+
+interface FooterSection {
+	label: string;
+	links: FooterLink[];
+}
+
+const footerLinks: FooterSection[] = [
+	{
+		label: 'Product',
+		links: [
+			{ title: 'Features', href: '#features' },
+			{ title: 'Pricing', href: '#pricing' },
+			{ title: 'Testimonials', href: '#testimonials' },
+			{ title: 'Integration', href: '/' },
+		],
+	},
+	{
+		label: 'Company',
+		links: [
+			{ title: 'FAQs', href: '/faqs' },
+			{ title: 'About Us', href: '/about' },
+			{ title: 'Privacy Policy', href: '/privacy' },
+			{ title: 'Terms of Services', href: '/terms' },
+		],
+	},
+	{
+		label: 'Resources',
+		links: [
+			{ title: 'Blog', href: '/blog' },
+			{ title: 'Changelog', href: '/changelog' },
+			{ title: 'Brand', href: '/brand' },
+			{ title: 'Help', href: '/help' },
+		],
+	},
+	{
+		label: 'Social Links',
+		links: [
+			{ title: 'Facebook', href: '#', icon: FacebookIcon },
+			{ title: 'Instagram', href: '#', icon: InstagramIcon },
+			{ title: 'Youtube', href: '#', icon: YoutubeIcon },
+			{ title: 'LinkedIn', href: '#', icon: LinkedinIcon },
+		],
+	},
+];
+
+export function Footer() {
+	return (
+		<footer className="md:rounded-t-6xl relative w-full max-w-6xl mx-auto flex flex-col items-center justify-center rounded-t-4xl border-t bg-[radial-gradient(35%_128px_at_50%_0%,theme(backgroundColor.white/8%),transparent)] px-6 py-12 lg:py-16">
+			<div className="bg-foreground/20 absolute top-0 right-1/2 left-1/2 h-px w-1/3 -translate-x-1/2 -translate-y-1/2 rounded-full blur" />
+
+			<div className="grid w-full gap-8 xl:grid-cols-3 xl:gap-8">
+				<AnimatedContainer className="space-y-4">
+					<FrameIcon className="size-8" />
+					<p className="text-muted-foreground mt-8 text-sm md:mt-0">
+						© {new Date().getFullYear()} Asme. All rights reserved.
+					</p>
+				</AnimatedContainer>
+
+				<div className="mt-10 grid grid-cols-2 gap-8 md:grid-cols-4 xl:col-span-2 xl:mt-0">
+					{footerLinks.map((section, index) => (
+						<AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
+							<div className="mb-10 md:mb-0">
+								<h3 className="text-xs">{section.label}</h3>
+								<ul className="text-muted-foreground mt-4 space-y-2 text-sm">
+									{section.links.map((link) => (
+										<li key={link.title}>
+											<a
+												href={link.href}
+												className="hover:text-foreground inline-flex items-center transition-all duration-300"
+											>
+												{link.icon && <link.icon className="me-1 size-4" />}
+												{link.title}
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						</AnimatedContainer>
+					))}
+				</div>
+			</div>
+		</footer>
+	);
+}
+
+type ViewAnimationProps = {
+	delay?: number;
+	className?: ComponentProps<typeof motion.div>['className'];
+	children: ReactNode;
+};
+
+function AnimatedContainer({ className, delay = 0.1, children }: ViewAnimationProps) {
+	const shouldReduceMotion = useReducedMotion();
+
+	if (shouldReduceMotion) {
+		return <>{children}</>;
+	}
+
+	return (
+		<motion.div
+			initial={{ filter: 'blur(4px)', translateY: -8, opacity: 0 }}
+			whileInView={{ filter: 'blur(0px)', translateY: 0, opacity: 1 }}
+			viewport={{ once: true }}
+			transition={{ delay, duration: 0.8 }}
+			className={className}
+		>
+			{children}
+		</motion.div>
+	);
+}
+
+export default Footer;
