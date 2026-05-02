@@ -1,4 +1,5 @@
 import HeroSection from "@/components/HeroSection";
+import { CinematicHero } from "@/components/ui/cinematic-hero";
 import Navbar from "@/components/Navbar";
 import HowItWorks from "@/components/HowItWorks";
 import { BentoGrid } from "@/components/BentoGrid";
@@ -38,6 +39,7 @@ export default function Home() {
     <>
       <Navbar />
       <HeroSection />
+      <CinematicHero />
       <main>
         <HowItWorks />
         <PlatformSection />
