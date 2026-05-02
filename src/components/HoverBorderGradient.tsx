@@ -10,14 +10,19 @@ function cn(...inputs: Parameters<typeof clsx>) {
 
 type Direction = 'TOP' | 'LEFT' | 'BOTTOM' | 'RIGHT'
 
-/* Uses dark-mode primary (#ffe0c2 warm peach) for the border sweep */
+/*
+ * Black  (#111111) — background fill
+ * White  (#eeeeee) — rotating edge sweep
+ * Caffeine (#ffe0c2) — hover highlight bloom
+ */
 const movingMap: Record<Direction, string> = {
-  TOP:    'radial-gradient(20.7% 50% at 50% 0%,   #ffe0c2 0%, rgba(255,224,194,0) 100%)',
-  LEFT:   'radial-gradient(16.6% 43.1% at 0% 50%, #ffe0c2 0%, rgba(255,224,194,0) 100%)',
-  BOTTOM: 'radial-gradient(20.7% 50% at 50% 100%, #ffe0c2 0%, rgba(255,224,194,0) 100%)',
-  RIGHT:  'radial-gradient(16.2% 41.2% at 100% 50%, #ffe0c2 0%, rgba(255,224,194,0) 100%)',
+  TOP:    'radial-gradient(20.7% 50% at 50% 0%,     #eeeeee 0%, rgba(238,238,238,0) 100%)',
+  LEFT:   'radial-gradient(16.6% 43.1% at 0% 50%,   #eeeeee 0%, rgba(238,238,238,0) 100%)',
+  BOTTOM: 'radial-gradient(20.7% 50% at 50% 100%,   #eeeeee 0%, rgba(238,238,238,0) 100%)',
+  RIGHT:  'radial-gradient(16.2% 41.2% at 100% 50%, #eeeeee 0%, rgba(238,238,238,0) 100%)',
 }
 
+/* On hover: caffeine bloom */
 const highlight =
   'radial-gradient(75% 181.16% at 50% 50%, #ffe0c2 0%, rgba(255,224,194,0) 100%)'
 
